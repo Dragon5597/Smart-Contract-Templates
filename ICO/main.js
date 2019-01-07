@@ -53,7 +53,7 @@ class TokenMain extends Contract {
   }
 
   getTokenName() {
-    return this.sender
+    return this.tokenName
   }
 
   transfer(to, amount) {
@@ -106,7 +106,7 @@ class TokenMain extends Contract {
   getMyAccount(address) {
     return this.accounts.find(account => account.address === address)
   }
-  
+
   getCurrentBlock() {
     const block = this.getLastestBlock()
     return block
