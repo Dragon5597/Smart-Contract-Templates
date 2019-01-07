@@ -79,16 +79,13 @@ class TokenMain extends Contract {
 
   async createAccount() {
     // create address
-    console.log('run')
     const address = await this.generateAddress()
     // save to db
-    console.log(address)
     const rs = {
       address: address.address,
       balance: 0
     }
     this.accounts.push(rs)
-    console.log(this.accounts)
     return address
   }
 
@@ -109,11 +106,11 @@ class TokenMain extends Contract {
   getMyAccount(address) {
     return this.accounts.find(account => account.address === address)
   }
+  
   getCurrentBlock() {
     const block = this.getLastestBlock()
     return block
   }
-  getCount() {}
 }
 
 export default TokenMain
