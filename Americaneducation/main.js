@@ -25,8 +25,22 @@ class TokenMain extends Contract {
   ]
   static authenticationFuncs = [
    
-    'createCollege',
-    'createGrade'
+    
+    'createPre_school',
+    'createKingdergarten',
+    'create_1st_Grade',
+    'create_2nd_Grade',
+    'create_3rd_Grade',
+    'create_4th_Grade',
+    'create_5th_Grade',
+    'create_6th_Grade',
+    'create_7th_Grade',
+    'create_8th_Grade',
+    'create_9th_Grade',
+    'create_10th_Grade',
+    'create_11th_Grade',
+    'create_12th_Grade',
+    'createCollege'
 
    
   ]
