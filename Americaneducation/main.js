@@ -25,7 +25,7 @@ class TokenMain extends Contract {
   ]
   static authenticationFuncs = [
    
-    
+  
     'createPre_school',
     'createKingdergarten',
     'create_1st_Grade',
