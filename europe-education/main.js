@@ -204,24 +204,7 @@ async createEuropean_Qualifications_Frame() {
     return this._grade.getGradeByType('ECTS')
   }
   // --------------------createCredit_Supplement ---------------------------
-// checkCredit_Supplement (address) {
-//   let checkCredit_Supplement= this.getCredit_SupplementByAddress(address)
-//   if (!checkCredit_Supplement || checkCredit_Supplement.type !== 'CREDIT_SUPPLEMENT') throw `CREDIT_SUPPLEMENT IS NOT EXIST`
-//   return true
-// }
-// getCredit_SupplementByAddress (address) {
-//   return this.accounts.find(account => account.address === address)
-// }
-//  async createCredit_Supplement() {
-//   await this.checkEcts(this.sender, 'ECTS')
-//   let  Credit_Supplement= await this._grade.createGrade('CREDIT_SUPPLEMENT')
-//   return Credit_Supplement
-// }
 
- 
-// getCredit_Supplement() {
-//   return this._grade.getGradeByType('CREDIT_SUPPLEMENT')
-// }
 async createCredit_Supplement() {
   let checkEcts = this._grade.getGradeByAddress(this.sender)
   if (!checkEcts || checkEcts.type !== 'ECTS') throw 'ECTS IS NOT EXIST'
