@@ -22,8 +22,6 @@ class TokenMain extends Contract {
     'get_Perform_shipping_and_raise_invoice_to_customer',
     'get_Invoice_for_customer'
 
-
-
   ]
   static authenticationFuncs = [
     'create_Order_goods_with_the_outsourcer',
@@ -126,7 +124,7 @@ class TokenMain extends Contract {
     let Client = await this._user.createUser('CLIENT')
     return Client
   }
-  
+
   // --------------------create_Order_goods_with_the_outsourcer---------------------------
   check_Order_goods_with_the_outsourcer(address) {
     let check_Order_goods_with_the_outsourcer = this.get_Order_goods_with_the_outsourcerByAddress(address)
@@ -145,8 +143,6 @@ class TokenMain extends Contract {
   get_Order_goods_with_the_outsourcer() {
     return this._ware.getWareByType('ORDER_GOODS_WITH_THE_OUTSOURCER')
   }
-
-
 
   // --------------------create_Update_order_with_the_outsourcer---------------------------
   check_Update_order_with_the_outsourcer(address) {
@@ -168,15 +164,30 @@ class TokenMain extends Contract {
 
   //--------------------create_Update_shipment_requests---------------------------
   check_Update_shipment_requests(address) {
-    let check_Update_shipment_requests= this.get_Update_shipment_requestsByAddress(address)
+    let check_Update_shipment_requests = this.get_Update_shipment_requestsByAddress(address)
     if (!check_Update_shipment_requests || check_Update_shipment_requests.type !== 'UPDATE_SHIPMENT_REQUESTS') throw `UPDATE_SHIPMENT_REQUESTS IS NOT EXIST`
     return true
   }
   get_Update_shipment_requestsByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
+
+  checkOrderGoods(address) {
+    let check_Order_goods_with_the_outsourcer = this.get_Order_goods_with_the_outsourcerByAddress(address);
+    if (check_Order_goods_with_the_outsourcer) {
+      if (check_Order_goods_with_the_outsourcer.type !== 'ORDER_GOODS_WITH_THE_OUTSOURCER') {
+        return false;
+      }
+      else if (check_Order_goods_with_the_outsourcer.type === 'ORDER_GOODS_WITH_THE_OUTSOURCER') {
+        return true;
+      }
+      else {
+        throw `ORDER_GOODS_WITH_THE_OUTSOURCER IS NOT EXIST`;
+      }
+    }
+  }
   async create_Update_shipment_requests() {
-    await this.check_Update_order_with_the_outsourcer(this.sender, 'UPDATE_ORDER_WITH_THE_OUTSOURCER')||this.check_Order_goods_with_the_outsourcer(this.sender, 'ORDER_GOODS_WITH_THE_OUTSOURCER')
+    await this.checkOrderGoods(this.sender, 'ORDER_GOODS_WITH_THE_OUTSOURCER')
     let _Update_shipment_requests = await this._ware.createWare('UPDATE_SHIPMENT_REQUESTS')
     return _Update_shipment_requests
   }
@@ -187,7 +198,8 @@ class TokenMain extends Contract {
 
   // --------------------create_Send_update_shipment_request_information_to_LSP---------------------------
   check_Send_update_shipment_request_information_to_LSP(address) {
-    let check_Send_update_shipment_request_information_to_LSP= this.get_Send_update_shipment_request_information_to_LSPByAddress(address)
+
+    let check_Send_update_shipment_request_information_to_LSP = this.get_Send_update_shipment_request_information_to_LSPByAddress(address)
     if (!check_Send_update_shipment_request_information_to_LSP || check_Send_update_shipment_request_information_to_LSP.type !== 'SEND_UPDATE_SHIPMENT_REQUEST_INFORMATION_TO_LSP') throw `SEND_UPDATE_SHIPMENT_REQUEST_INFORMATION_TO_LSP IS NOT EXIST`
     return true
   }
@@ -231,7 +243,7 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async create_Send_delivery_information_to_OTM() {
-    await this.check_Update_SO_shipping_info_based_on_SO (this.sender, 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO')
+    await this.check_Update_SO_shipping_info_based_on_SO(this.sender, 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO')
     let _Send_delivery_information_to_OTM = await this._ware.createWare('SEND_DELIVERY_INFORMATION_TO_OTM')
     return _Send_delivery_information_to_OTM
   }
@@ -288,8 +300,23 @@ class TokenMain extends Contract {
   get_Picking_waveByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
+
+  checkWARE(address) {
+    let check_Update_SO_shipping_info_based_on_SO = this.get_Update_SO_shipping_info_based_on_SOByAddress(address);
+    if (check_Update_SO_shipping_info_based_on_SO) {
+      if (check_Update_SO_shipping_info_based_on_SO.type !== 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO') {
+        return false;
+      }
+      else if (check_Update_SO_shipping_info_based_on_SO.type === 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO') {
+        return true;
+      }
+      else {
+        throw `UPDATE_SO_SHIPPING_INFO_BASED_ON_SO IS NOT EXIST`;
+      }
+    }
+  }
   async create_Picking_wave() {
-    (await this.check_Update_delivery_information_create_trips(this.sender, 'UPDATE_DELIVERY_INFORMATION_CREATE_TRIPS'))||(await this.check_Update_SO_shipping_info_based_on_SO(this.sender, 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO'))
+    await this.checkWARE(this.sender, 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO')
     let _Picking_wave = await this._ware.createWare('PICKING_WARE')
     return _Picking_wave
   }
@@ -404,7 +431,7 @@ class TokenMain extends Contract {
     return _Send_shipment_confirmation_to_outsourcer
   }
 
-  get_Ship_material_to_outsourcers_customer() {
+  get_Send_shipment_confirmation_to_outsourcer() {
     return this._ware.getWareByType('SEND_SHIPMENT_CONFIRMATION_TO_OUTSOURCER')
   }
   //--------------------create_Perform_shipping_and_raise_invoice_to_customer---------------------------
@@ -417,7 +444,7 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async create_Perform_shipping_and_raise_invoice_to_customer() {
-    await this.check_Ship_material_to_outsourcers_customer(this.sender, 'SEND_SHIPMENT_CONFIRMATION_TO_OUTSOURCER')
+    await this.check_Send_shipment_confirmation_to_outsourcer(this.sender, 'SEND_SHIPMENT_CONFIRMATION_TO_OUTSOURCER')
     let _Perform_shipping_and_raise_invoice_to_customer = await this._ware.createWare('PERFORM_SHIPPING_AND_RAISE_INVOICE_TO_CUSTOMER')
     return _Perform_shipping_and_raise_invoice_to_customer
   }
@@ -435,7 +462,7 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async create_Invoice_for_customer() {
-    await this.check_Ship_material_to_outsourcers_customer(this.sender, 'PERFORM_SHIPPING_AND_RAISE_INVOICE_TO_CUSTOMER')
+    await this.check_Perform_shipping_and_raise_invoice_to_customer(this.sender, 'PERFORM_SHIPPING_AND_RAISE_INVOICE_TO_CUSTOMER')
     let _Invoice_for_customer = await this._ware.createWare('INVOICE_FOR_CUSTOMER')
     return _Invoice_for_customer
   }
@@ -443,15 +470,28 @@ class TokenMain extends Contract {
   get_Invoice_for_customer() {
     return this._ware.getWareByType('INVOICE_FOR_CUSTOMER')
   }
-   //--------------------create_Reaceive_goods_from_LSP_and_pay_outsourcer---------------------------
+  //--------------------create_Reaceive_goods_from_LSP_and_pay_outsourcer---------------------------
+  checkend(address) {
+    let check_Invoice_for_customer = this.get_Invoice_for_customerByAddress(address);
+    if (check_Invoice_for_customer) {
+      if (check_Invoice_for_customer.type !== 'INVOICE_FOR_CUSTOMER') {
+        return false;
+      }
+
+      else if (check_Invoice_for_customer.type === 'INVOICE_FOR_CUSTOMER') {
+        return true;
+      }
+      else {
+        throw `INVOICE_FOR_CUSTOMER IS NOT EXIST`;
+      }
+    }
+  }
   async create_Reaceive_goods_from_LSP_and_pay_outsourcer() {
-    (await this.check_Invoice_for_customer(this.sender, 'INVOICE_FOR_CUSTOMER'))||(await this.check_Ship_material_to_outsourcers_customer(this.sender, 'SHIP_MATERIAL_TO_OUTSOURCERS_CUSTOMER'))
-    let _Reaceive_goods_from_LSP_and_pay_outsourcer = await this._grade.createGrade('REACEIVE_GOODS_FROM_LSP_AND_PAY_OUTSOURCER')
+    await this.checkend(this.sender, 'INVOICE_FOR_CUSTOMER')
+    let _Reaceive_goods_from_LSP_and_pay_outsourcer = await this._ware.createWare('REACEIVE_GOODS_FROM_LSP_AND_PAY_OUTSOURCER')
     this.setToAddress(_Reaceive_goods_from_LSP_and_pay_outsourcer.address)
     return 'SUCCESS'
 
-
-
-
-}}
+  }
+}
 export default TokenMain;
