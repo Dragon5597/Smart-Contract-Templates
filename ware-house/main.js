@@ -85,8 +85,6 @@ class TokenMain extends Contract {
 
 
 
-
-
   ]
   static schemas = {
     name: {
@@ -173,21 +171,23 @@ class TokenMain extends Contract {
   }
 
   checkOrderGoods(address) {
-    let check_Order_goods_with_the_outsourcer = this.get_Order_goods_with_the_outsourcerByAddress(address);
-    if (check_Order_goods_with_the_outsourcer) {
-      if (check_Order_goods_with_the_outsourcer.type !== 'ORDER_GOODS_WITH_THE_OUTSOURCER') {
-        return false;
-      }
-      else if (check_Order_goods_with_the_outsourcer.type === 'ORDER_GOODS_WITH_THE_OUTSOURCER') {
-        return true;
-      }
-      else {
-        throw `ORDER_GOODS_WITH_THE_OUTSOURCER IS NOT EXIST`;
-      }
+    this.check_Order_goods_with_the_outsourcer = this.get_Order_goods_with_the_outsourcerByAddress(address);
+    this.check_Update_order_with_the_outsourcer = this.get_Update_order_with_the_outsourcerByAddress(address);
+
+    if (this.check_Order_goods_with_the_outsourcer.type == 'ORDER_GOODS_WITH_THE_OUTSOURCER') {
+      return true;
     }
+    else if (this.check_Update_order_with_the_outsourcer.type == 'UPDATE_ORDER_WITH_THE_OUTSOURCER') {
+      return true;
+    }
+    else {
+      throw `ORDER_GOODS_WITH_THE_OUTSOURCER_OR_UPDATE_ORDER_WITH_THE_OUTSOURCER IS NOT EXIST`;
+
+    }
+
   }
   async create_Update_shipment_requests() {
-    await this.checkOrderGoods(this.sender, 'ORDER_GOODS_WITH_THE_OUTSOURCER')
+    await this.checkOrderGoods(this.sender, 'ORDER_GOODS_WITH_THE_OUTSOURCER_OR_UPDATE_ORDER_WITH_THE_OUTSOURCER')
     let _Update_shipment_requests = await this._ware.createWare('UPDATE_SHIPMENT_REQUESTS')
     return _Update_shipment_requests
   }
@@ -302,21 +302,23 @@ class TokenMain extends Contract {
   }
 
   checkWARE(address) {
-    let check_Update_SO_shipping_info_based_on_SO = this.get_Update_SO_shipping_info_based_on_SOByAddress(address);
-    if (check_Update_SO_shipping_info_based_on_SO) {
-      if (check_Update_SO_shipping_info_based_on_SO.type !== 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO') {
-        return false;
-      }
-      else if (check_Update_SO_shipping_info_based_on_SO.type === 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO') {
-        return true;
-      }
-      else {
-        throw `UPDATE_SO_SHIPPING_INFO_BASED_ON_SO IS NOT EXIST`;
-      }
+
+    this.check_Update_SO_shipping_info_based_on_SO = this.get_Update_SO_shipping_info_based_on_SOByAddress(address);
+    this.check_Update_delivery_information_create_trips = this.get_Update_delivery_information_create_tripsByAddress(address);
+
+    if (this.check_Update_SO_shipping_info_based_on_SO.type == 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO') {
+      return true;
+    }
+    else if (this.check_Update_delivery_information_create_trips.type == 'UPDATE_DELIVERY_INFORMATION_CREATE_TRIPS') {
+      return true;
+    }
+    else {
+      throw `UPDATE_SO_SHIPPING_INFO_BASED_ON_SO_OR_UPDATE_DELIVERY_INFORMATION_CREATE_TRIPS IS NOT EXIST`;
+
     }
   }
   async create_Picking_wave() {
-    await this.checkWARE(this.sender, 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO')
+    await this.checkWARE(this.sender, 'UPDATE_SO_SHIPPING_INFO_BASED_ON_SO_OR_UPDATE_DELIVERY_INFORMATION_CREATE_TRIPS')
     let _Picking_wave = await this._ware.createWare('PICKING_WARE')
     return _Picking_wave
   }
@@ -472,22 +474,24 @@ class TokenMain extends Contract {
   }
   //--------------------create_Reaceive_goods_from_LSP_and_pay_outsourcer---------------------------
   checkend(address) {
-    let check_Invoice_for_customer = this.get_Invoice_for_customerByAddress(address);
-    if (check_Invoice_for_customer) {
-      if (check_Invoice_for_customer.type !== 'INVOICE_FOR_CUSTOMER') {
-        return false;
-      }
 
-      else if (check_Invoice_for_customer.type === 'INVOICE_FOR_CUSTOMER') {
-        return true;
-      }
-      else {
-        throw `INVOICE_FOR_CUSTOMER IS NOT EXIST`;
-      }
+    this.check_Invoice_for_customer = this.get_Invoice_for_customerByAddress(address);
+    this.check_Ship_material_to_outsourcers_customer = this.get_Ship_material_to_outsourcers_customerByAddress(address);
+
+    if (this.check_Invoice_for_customer.type == 'INVOICE_FOR_CUSTOMER') {
+      return true;
     }
+    else if (this.check_Ship_material_to_outsourcers_customer.type == 'SHIP_MATERIAL_TO_OUTSOURCERS_CUSTOMER') {
+      return true;
+    }
+    else {
+      throw `INVOICE_FOR_CUSTOMER_OR_SHIP_MATERIAL_TO_OUTSOURCERS_CUSTOMER IS NOT EXIST`;
+
+    }
+
   }
   async create_Reaceive_goods_from_LSP_and_pay_outsourcer() {
-    await this.checkend(this.sender, 'INVOICE_FOR_CUSTOMER')
+    await this.checkend(this.sender, 'INVOICE_FOR_CUSTOMER_OR_SHIP_MATERIAL_TO_OUTSOURCERS_CUSTOMER')
     let _Reaceive_goods_from_LSP_and_pay_outsourcer = await this._ware.createWare('REACEIVE_GOODS_FROM_LSP_AND_PAY_OUTSOURCER')
     this.setToAddress(_Reaceive_goods_from_LSP_and_pay_outsourcer.address)
     return 'SUCCESS'
