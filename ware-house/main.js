@@ -41,7 +41,7 @@ class TokenMain extends Contract {
     'create_Send_shipment_confirmation_to_outsourcer',
     'create_Perform_shipping_and_raise_invoice_to_customer',
     'create_Invoice_for_customer',
-    'create_Reaceive_goods_from_LSP_and_pay_outsourcer'
+    'create_Receive_goods_from_LSP_and_pay_outsourcer'
 
   ]
   static publicFuncs = [
@@ -81,7 +81,7 @@ class TokenMain extends Contract {
     'get_Perform_shipping_and_raise_invoice_to_customer',
     'create_Invoice_for_customer',
     'get_Invoice_for_customer',
-    'create_Reaceive_goods_from_LSP_and_pay_outsourcer'
+    'create_Receive_goods_from_LSP_and_pay_outsourcer'
 
 
 
@@ -472,7 +472,7 @@ class TokenMain extends Contract {
   get_Invoice_for_customer() {
     return this._ware.getWareByType('INVOICE_FOR_CUSTOMER')
   }
-  //--------------------create_Reaceive_goods_from_LSP_and_pay_outsourcer---------------------------
+  //--------------------create_Receive_goods_from_LSP_and_pay_outsourcer---------------------------
   checkend(address) {
 
     this.check_Invoice_for_customer = this.get_Invoice_for_customerByAddress(address);
@@ -490,10 +490,10 @@ class TokenMain extends Contract {
     }
 
   }
-  async create_Reaceive_goods_from_LSP_and_pay_outsourcer() {
+  async create_Receive_goods_from_LSP_and_pay_outsourcer() {
     await this.checkend(this.sender, 'INVOICE_FOR_CUSTOMER_OR_SHIP_MATERIAL_TO_OUTSOURCERS_CUSTOMER')
-    let _Reaceive_goods_from_LSP_and_pay_outsourcer = await this._ware.createWare('REACEIVE_GOODS_FROM_LSP_AND_PAY_OUTSOURCER')
-    this.setToAddress(_Reaceive_goods_from_LSP_and_pay_outsourcer.address)
+    let _Receive_goods_from_LSP_and_pay_outsourcer = await this._ware.createWare('RECEIVE_GOODS_FROM_LSP_AND_PAY_OUTSOURCER')
+    this.setToAddress(_Receive_goods_from_LSP_and_pay_outsourcer.address)
     return 'SUCCESS'
 
   }
