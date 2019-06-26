@@ -1,8 +1,8 @@
 import Contract from 'Contract'
-const types = ['ARE_YOU_SINGLE']
+const types = ["PEOPLE"]
 class Tax extends Contract {
   async createTax (type) {
-    if (!types.includes(type)) throw 'CREATE TAX FAIL'
+    if (!types.includes(type)) throw 'CREATE PEOPLE FAIL'
     const address = await this.generateAddress()
     console.log({ address })
     let rs = {

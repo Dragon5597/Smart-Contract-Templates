@@ -3,6 +3,7 @@ import Tax from './tax'
 import QS from './QS'
 class TokenMain extends Contract {
   static viewFuncs = [
+    'getPeople',
     'getAre_you_single  ',
     'getAre_you_under_65_year_of_age',
     'getIs_your_gross_income_less_than_$8450',
@@ -11,6 +12,7 @@ class TokenMain extends Contract {
 
   ]
   static authenticationFuncs = [
+    'Are_you_single',
     'B',
     'Are_you_under_65_year_of_age',
     'Are_you_under_65_year_of_age',
@@ -24,6 +26,8 @@ class TokenMain extends Contract {
 
   ]
   static publicFuncs = [
+    'createPeople',
+    'getPeople',
     'Are_you_single',
     'getAre_you_single',
     'B',
@@ -63,21 +67,37 @@ class TokenMain extends Contract {
     this._QS = new QS(data)
   }
 
-  //---------------------Are_you_single------------------------------
+  //---------------------createPeople------------------------------
 
-  async Are_you_single() {
-    let single = await this._tax.createTax('ARE_YOU_SINGLE')
-    return single
+  async createPeople() {
+    let people = await this._tax.createTax('PEOPLE')
+    return people
 
   }
-  getAre_you_single() {
-    let single = this._tax.getTaxByType('ARE_YOU_SINGLE')
-    return single
+  getPeople() {
+    let people = this._tax.getTaxByType('PEOPLE')
+    return people
   }
-
+// --------------------Are_you_single---------------------------
+checkAre_you_single(address) {
+  let checkAre_you_single = this.getAre_you_singleByAddress(address)
+  if (!checkAre_you_single || checkAre_you_single.type !== 'ARE_YOU_SINGLE') throw `ARE_YOU_SINGLE IS NOT EXIST`
+  return true
+}
+getAre_you_singleByAddress(address) {
+  return this.accounts.find(account => account.address === address)
+}
+async Are_you_single() {
+  await this._tax.checkTax(this.sender, 'PEOPLE')
+  let Are_you_single = await this._QS.createQS('ARE_YOU_SINGLE')
+  return Are_you_single
+}
+getAre_you_single() {
+  return this._QS.getQSByType('ARE_YOU_SINGLE')
+}
   // --------------------B--------------------------
   async B() {
-    await this._tax.checkTax(this.sender, 'ARE_YOU_SINGLE')
+    await this.checkAre_you_single(this.sender, 'ARE_YOU_SINGLE')
     let B = await this._QS.createQS('B')
     this.setToAddress(B.address)
     // return { Enduser }
@@ -93,7 +113,7 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async Are_you_under_65_year_of_age() {
-    await this.Are_you_single(this.sender, 'ARE_YOU_SINGLE')
+    await this.checkAre_you_single(this.sender, 'ARE_YOU_SINGLE')
     let Are_you_under_65_year_of_age = await this._QS.createQS('ARE_YOU_UNDER_65_YEAR_OF_AGE')
     return Are_you_under_65_year_of_age
   }
@@ -115,6 +135,7 @@ class TokenMain extends Contract {
     return Is_your_gross_income_less_than_A
   }
   getIs_your_gross_income_less_than_$8450() {
+
     return this._QS.getQSByType('IS_YOUR_GROSS_INCOME_LESS_THAN_$8450')
   }
   // --------------------Youdo_not_have_to_file_an_income_tax_return ---------------------------
