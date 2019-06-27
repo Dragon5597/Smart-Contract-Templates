@@ -21,14 +21,11 @@ class TokenMain extends Contract {
     'get_Purchase_Product_from_Retailer',
     'get_Product_sold_to_customer',
     'get_Ships_Goods_to_Customer',
-    // 'get_Receipt_and_Verify_the_Product_and_track_hitory_using_Token'
+    
 
   ]
   static authenticationFuncs = [
-    // 'create_Wholesaler',
-    // 'create_Retailer',
-    // 'create_Customer',
-    // 'create_Manufacturer',
+   
     'Place_PO_on_Manufacturer',
     'Create_WO',
     'Manufacturer_Goods',
@@ -43,6 +40,8 @@ class TokenMain extends Contract {
     'Purchase_Product_from_Retailer',
     'Product_sold_to_customer',
     'Ships_Goods_to_Customer',
+    'Product_sold_to_customer_or_PO_Receipt_on_Verification_of_Token',
+    'Sales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag',
     'Receipt_and_Verify_the_Product_and_track_history_using_Token'
 
   ]
@@ -74,6 +73,7 @@ class TokenMain extends Contract {
     'get_Place_PO_on_wholesaler',
     'Sales_Order_Generated_for_Retailer',
     'get_Sales_Order_Generated_for_Retailer',
+    'Sales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag',
     'Fulfillment_of_Sales_Order_Shipment_to_Retailer',
     'get_Fulfillment_of_Sales_Order_Shipment_to_Retailer',
     'Change_of_ownership_and_tranfer_for_Token_to_Retailer',
@@ -84,6 +84,7 @@ class TokenMain extends Contract {
     'get_Purchase_Product_from_Retailer',
     'Product_sold_to_customer',
     'get_Product_sold_to_customer',
+    'Product_sold_to_customer_or_PO_Receipt_on_Verification_of_Token',
     'Ships_Goods_to_Customer',
     'get_Ships_Goods_to_Customer',
     'Receipt_and_Verify_the_Product_and_track_history_using_Token'
@@ -93,7 +94,7 @@ class TokenMain extends Contract {
   static schemas = {
     name: {
       type: String,
-      default: 'ANTI_COUNTERFEIT'
+      default: 'ANTI_COUNTERFEIT_SOLUTION'
     },
     accounts: [
       {
@@ -151,14 +152,7 @@ class TokenMain extends Contract {
 
 
   // --------------------Place_PO_on_Manufacturer---------------------------
-  check_Place_PO_on_Manufacturer(address) {
-    let check_Place_PO_on_Manufacturer = this.get_Place_PO_on_ManufacturerByAddress(address)
-    if (!check_Place_PO_on_Manufacturer || check_Place_PO_on_Manufacturer.type !== 'PLACE_PO_ON_MANUFACTURER') throw `PLACE_PO_ON_MANUFACTURER IS NOT EXIST`
-    return true
-  }
-  get_Place_PO_on_ManufacturerByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
+ 
 
   async Place_PO_on_Manufacturer() {
     await this._user.checkUser(this.sender, 'WHOLESALER')
@@ -171,14 +165,6 @@ class TokenMain extends Contract {
 
   // --------------------Create_WO---------------------------
 
-  check_Create_WO(address) {
-    let check_Create_WO = this.get_Create_WOByAddress(address)
-    if (!check_Create_WO || check_Create_WO.type !== 'CREATE_WO') throw `CREATE_WO IS NOT EXIST`
-    return true
-  }
-  get_Create_WOByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
 
   async Create_WO(address_Place_PO_on_Manufacturer) {
     this._user.checkUser(this.sender, 'MANUFACTURER')
@@ -196,16 +182,7 @@ class TokenMain extends Contract {
 
 
   // --------------------Manufacturer_Goods---------------------------
-  check_Manufacturer_Goods(address) {
 
-    let check_Manufacturer_Goods = this.get_Manufacturer_GoodsByAddress(address)
-    if (!check_Manufacturer_Goods || check_Manufacturer_Goods.type !== 'MANUFACTURER_GOODS')
-      throw `MANUFACTURER_GOODS IS NOT EXIST`
-    return true
-  }
-  get_Manufacturer_GoodsByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
 
   async Manufacturer_Goods(address_Create_WO) {
     this._user.checkUser(this.sender, 'MANUFACTURER')
@@ -221,14 +198,7 @@ class TokenMain extends Contract {
   }
 
   // --------------------Blockchain_Token_for_Finished_Good---------------------------
-  check_Blockchain_Token_for_Finished_Good(address) {
-    let check_Blockchain_Token_for_Finished_Good = this.get_Blockchain_Token_for_Finished_GoodByAddress(address)
-    if (!check_Blockchain_Token_for_Finished_Good || check_Blockchain_Token_for_Finished_Good.type !== 'BLOCKCHAIN_TOKEN_FOR_FINISHED_GOOD') throw `BLOCKCHAIN_TOKEN_FOR_FINISHED_GOOD IS NOT EXIST`
-    return true
-  }
-  get_Blockchain_Token_for_Finished_GoodByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
+
   async Blockchain_Token_for_Finished_Good(address_Manufacturer_Goods) {
     this._user.checkUser(this.sender, 'MANUFACTURER')
     let check_Manufacturer_Goods = this._stage.getStageByAddress(address_Manufacturer_Goods)
@@ -245,14 +215,7 @@ class TokenMain extends Contract {
 
   // --------------------Order_Fulfillment_ship_the_goods_with_Generated_Token---------------------------
 
-  check_Order_Fulfillment_ship_the_goods_with_Generated_Token(address) {
-    let check_Order_Fulfillment_ship_the_goods_with_Generated_Token = this.get_Order_Fulfillment_ship_the_goods_with_Generated_TokenByAddress(address)
-    if (!check_Order_Fulfillment_ship_the_goods_with_Generated_Token || check_Order_Fulfillment_ship_the_goods_with_Generated_Token.type !== 'ORDER_FULFILLMENT_SHIP_THE_GOODS_WITH_GENERATED_TOKEN') throw `ORDER_FULFILLMENT_SHIP_THE_GOODS_WITH_GENERATED_TOKEN IS NOT EXIST`
-    return true
-  }
-  get_Order_Fulfillment_ship_the_goods_with_Generated_TokenByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
+
 
   async Order_Fulfillment_ship_the_goods_with_Generated_Token(address_Blockchain_Token_for_Finished_Good) {
     this._user.checkUser(this.sender, 'MANUFACTURER')
@@ -291,14 +254,7 @@ class TokenMain extends Contract {
   }
 
   // --------------------Place_PO_on_wholesaler---------------------------
-  check_Place_PO_on_wholesaler(address) {
-    let check_Place_PO_on_wholesaler = this.get_Place_PO_on_wholesalerByAddress(address)
-    if (!check_Place_PO_on_wholesaler || check_Place_PO_on_wholesaler.type !== 'PLACE_PO_ON_WHOLESALER') throw `PLACE_PO_ON_WHOLESALER IS NOT EXIST`
-    return true
-  }
-  get_Place_PO_on_wholesalerByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
+ 
   async Place_PO_on_wholesaler() {
     await this._user.checkUser(this.sender, 'RETAILER')
     let Place_PO_on_wholesaler = await this._stage.createStage('PLACE_PO_ON_WHOLESALER')
@@ -333,15 +289,8 @@ class TokenMain extends Contract {
     return this._stage.getStageByType('SALES_ORDER_GENERATED_FOR_RETAILER')
   }
   // --------------------Fulfillment_of_Sales_Order_Shipment_to_Retailer---------------------------
-  check_Fulfillment_of_Sales_Order_Shipment_to_Retailer(address) {
-    let check_Fulfillment_of_Sales_Order_Shipment_to_Retailer = this.get_Fulfillment_of_Sales_Order_Shipment_to_RetailerByAddress(address)
-    if (!check_Fulfillment_of_Sales_Order_Shipment_to_Retailer || check_Fulfillment_of_Sales_Order_Shipment_to_Retailer.type !== 'FULFILLMENT_OF_SALES_ORDER_SHIPMENT_TO_RETAILER') throw `FULFILLMENT_OF_SALES_ORDER_SHIPMENT_TO_RETAILER IS NOT EXIST`
-    return true
-  }
-  get_Fulfillment_of_Sales_Order_Shipment_to_RetailerByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
-  checkSale(address) {
+ 
+   checkSale(address) {
     this.check_Sales_Order_Generated_for_Retailer = this.get_Sales_Order_Generated_for_RetailerByAddress(address);
     this.check_Receive_PO_and_verify_Tag = this.get_Receive_PO_and_verify_TagByAddress(address);
 
@@ -352,61 +301,32 @@ class TokenMain extends Contract {
       return true;
     }
     else {
-      throw `SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG IS NOT EXIST`;
+      throw `SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG_OF_SALE IS NOT EXIST`;
 
     }
 
   }
+  async Sales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag() {
+    await this.checkSale(this.sender, 'SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG_OF_SALE')
+    let Sales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag = await this._stage.createStage('SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG')
+    return Sales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag
+  }
 
-
-  async Fulfillment_of_Sales_Order_Shipment_to_Retailer(address_Sales_Order_Generated_for_Retailer_or_Receive_PO_and_verify_Tag) {
+  async Fulfillment_of_Sales_Order_Shipment_to_Retailer(address_Sales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag) {
     this._user.checkUser(this.sender, 'WHOLESALER')
-    // -----------------
-    let check_Sales_Order_Generated_for_Retailer = this._stage.getStageByAddress(
-      address_Sales_Order_Generated_for_Retailer_or_Receive_PO_and_verify_Tag
-    )
-    let check_Receive_PO_and_verify_Tag = this._stage.getStageByAddress(
-      address_Sales_Order_Generated_for_Retailer_or_Receive_PO_and_verify_Tag
-    )
-
-    //check the first conditions
-    if (
-      !check_Sales_Order_Generated_for_Retailer ||
-      !check_Receive_PO_and_verify_Tag ||
-      check_Sales_Order_Generated_for_Retailer.type !== 'SALES_ORDER_GENERATED_FOR_RETAILER' ||
-      check_Receive_PO_and_verify_Tag.type !== 'RECEIVE_PO_AND_VERIFY_TAG'
-    )
-      throw 'SALES_ORDER_GENERATED_FOR_RETAILER or RECEIVE_PO_AND_VERIFY_TAG IS NOT EXIST'
-
-    
-    //check the second conditions
-    // if (!check_Receive_PO_and_verify_Tag ||
-    //    check_Receive_PO_and_verify_Tag.type !== 'RECEIVE_PO_AND_VERIFY_TAG')
-    //   throw 'RECEIVE_PO_AND_VERIFY_TAG IS NOT EXIST'
-
+    let checkSales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag = this._stage.getStageByAddress(address_Sales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag)
+    if (!checkSales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag || checkSales_Order_Generated_for_Retailer_or_check_Receive_PO_and_verify_Tag.type !== 'SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG')
+      throw 'SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG IS NOT EXIST'
     let Fulfillment_of_Sales_Order_Shipment_to_Retailer = await this._stage.createStage('FULFILLMENT_OF_SALES_ORDER_SHIPMENT_TO_RETAILER')
     return Fulfillment_of_Sales_Order_Shipment_to_Retailer
-
   }
-  // async Fulfillment_of_Sales_Order_Shipment_to_Retailer() {
-  //   await this.checkSale(this.sender, 'SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG')
-  //   let Fulfillment_of_Sales_Order_Shipment_to_Retailer = await this._stage.createStage('FULFILLMENT_OF_SALES_ORDER_SHIPMENT_TO_RETAILER')
-  //   return Fulfillment_of_Sales_Order_Shipment_to_Retailer
-  // }
 
   get_Fulfillment_of_Sales_Order_Shipment_to_Retailer() {
     return this._stage.getStageByType('FULFILLMENT_OF_SALES_ORDER_SHIPMENT_TO_RETAILER')
   }
 
   // --------------------Change_of_ownership_and_tranfer_for_Token_to_Retailer---------------------------
-  check_Change_of_ownership_and_tranfer_for_Token_to_Retailer(address) {
-    let check_Change_of_ownership_and_tranfer_for_Token_to_Retailer = this.get_Change_of_ownership_and_tranfer_for_Token_to_RetailerByAddress(address)
-    if (!check_Change_of_ownership_and_tranfer_for_Token_to_Retailer || check_Change_of_ownership_and_tranfer_for_Token_to_Retailer.type !== 'CHANGE_OF_OWNERSHIP_AND_TRANFER_FOR_TOKEN_TO_RETAILER') throw `CHANGE_OF_OWNERSHIP_AND_TRANFER_FOR_TOKEN_TO_RETAILER IS NOT EXIST`
-    return true
-  }
-  get_Change_of_ownership_and_tranfer_for_Token_to_RetailerByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
+
   async Change_of_ownership_and_tranfer_for_Token_to_Retailer(address_Fulfillment_of_Sales_Order_Shipment_to_Retailer) {
     this._user.checkUser(this.sender, 'WHOLESALER')
     let checkFulfillment_of_Sales_Order_Shipment_to_Retailer = this._stage.getStageByAddress(address_Fulfillment_of_Sales_Order_Shipment_to_Retailer)
@@ -414,13 +334,7 @@ class TokenMain extends Contract {
       throw 'FULFILLMENT_OF_SALES_ORDER_SHIPMENT_TO_RETAILER IS NOT EXIST'
     let Change_of_ownership_and_tranfer_for_Token_to_Retailer = await this._stage.createStage('CHANGE_OF_OWNERSHIP_AND_TRANFER_FOR_TOKEN_TO_RETAILER')
     return Change_of_ownership_and_tranfer_for_Token_to_Retailer
-
   }
-  // async Change_of_ownership_and_tranfer_for_Token_to_Retailer() {
-  //   await this.check_Fulfillment_of_Sales_Order_Shipment_to_Retailer(this.sender, 'FULFILLMENT_OF_SALES_ORDER_SHIPMENT_TO_RETAILER')
-  //   let Change_of_ownership_and_tranfer_for_Token_to_Retailer = await this._stage.createStage('CHANGE_OF_OWNERSHIP_AND_TRANFER_FOR_TOKEN_TO_RETAILER')
-  //   return Change_of_ownership_and_tranfer_for_Token_to_Retailer
-  // }
 
   get_Change_of_ownership_and_tranfer_for_Token_to_Retailer() {
     return this._stage.getStageByType('CHANGE_OF_OWNERSHIP_AND_TRANFER_FOR_TOKEN_TO_RETAILER')
@@ -436,7 +350,7 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async PO_Receipt_on_Verification_of_Token(address_Change_of_ownership_and_tranfer_for_Token_to_Retailer) {
-    this._user.checkUser(this.sender, 'WHOLESALER')
+    this._user.checkUser(this.sender, 'RETAILER')
     let checkChange_of_ownership_and_tranfer_for_Token_to_Retailer = this._stage.getStageByAddress(address_Change_of_ownership_and_tranfer_for_Token_to_Retailer)
     if (!checkChange_of_ownership_and_tranfer_for_Token_to_Retailer || checkChange_of_ownership_and_tranfer_for_Token_to_Retailer.type !== 'CHANGE_OF_OWNERSHIP_AND_TRANFER_FOR_TOKEN_TO_RETAILER')
       throw 'CHANGE_OF_OWNERSHIP_AND_TRANFER_FOR_TOKEN_TO_RETAILER IS NOT EXIST'
@@ -444,24 +358,12 @@ class TokenMain extends Contract {
     return PO_Receipt_on_Verification_of_Token
 
   }
-  // async PO_Receipt_on_Verification_of_Token() {
-  //   await this.check_Change_of_ownership_and_tranfer_for_Token_to_Retailer(this.sender, 'CHANGE_OF_OWNERSHIP_AND_TRANFER_FOR_TOKEN_TO_RETAILER')
-  //   let PO_Receipt_on_Verification_of_Token = await this._stage.createStage('PO_RECEIPT_ON_VERIFICATION_OF_TOKEN')
-  //   return PO_Receipt_on_Verification_of_Token
-  // }
 
   get_PO_Receipt_on_Verification_of_Token() {
     return this._stage.getStageByType('PO_RECEIPT_ON_VERIFICATION_OF_TOKEN')
   }
   // --------------------Purchase_Product_from_Retailer---------------------------
-  check_Purchase_Product_from_Retailer(address) {
-    let check_Purchase_Product_from_Retailer = this.get_Purchase_Product_from_RetailerByAddress(address)
-    if (!check_Purchase_Product_from_Retailer || check_Purchase_Product_from_Retailer.type !== 'PURCHASE_PRODUCT_FROM_RETAILER') throw `PURCHASE_PRODUCT_FROM_RETAILER IS NOT EXIST`
-    return true
-  }
-  get_Purchase_Product_from_RetailerByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
+ 
   async Purchase_Product_from_Retailer() {
     await this._user.checkUser(this.sender, 'CUSTOMER')
     let Purchase_Product_from_Retailer = await this._stage.createStage('PURCHASE_PRODUCT_FROM_RETAILER')
@@ -489,24 +391,12 @@ class TokenMain extends Contract {
     return Product_sold_to_customer
 
   }
-  // async Product_sold_to_customer() {
-  //   await this.check_Purchase_Product_from_Retailer(this.sender, 'PURCHASE_PRODUCT_FROM_RETAILER')
-  //   let Product_sold_to_customer = await this._stage.createStage('PRODUCT_SOLD_TO_CUSTOMER')
-  //   return Product_sold_to_customer
-
 
   get_Product_sold_to_customer() {
     return this._stage.getStageByType('PRODUCT_SOLD_TO_CUSTOMER')
   }
   // --------------------Ships_Goods_to_Customer---------------------------
-  check_Ships_Goods_to_Customer(address) {
-    let check_Ships_Goods_to_Customer = this.get_Ships_Goods_to_CustomerByAddress(address)
-    if (!check_Ships_Goods_to_Customer || check_Ships_Goods_to_Customer.type !== 'SHIPS_GOODS_TO_CUSTOMER') throw `SHIPS_GOODS_TO_CUSTOMER IS NOT EXIST`
-    return true
-  }
-  get_Ships_Goods_to_CustomerByAddress(address) {
-    return this.accounts.find(account => account.address === address)
-  }
+ 
   checkShip(address) {
     this.check_Product_sold_to_customer = this.get_Product_sold_to_customerByAddress(address);
     this.check_PO_Receipt_on_Verification_of_Token = this.get_PO_Receipt_on_Verification_of_TokenByAddress(address);
@@ -518,39 +408,31 @@ class TokenMain extends Contract {
       return true;
     }
     else {
-      throw `PRODUCT_SOLD_TO_CUSTOMER_OR_PO_RECEIPT_ON_VERIFICATION_OF_TOKEN IS NOT EXIST`;
+      throw `PRODUCT_SOLD_TO_CUSTOMER_OR_PO_RECEIPT_ON_VERIFICATION_OF_TOKEN_OF_SHIP IS NOT EXIST`;
     }
 
   }
+  async Product_sold_to_customer_or_PO_Receipt_on_Verification_of_Token() {
+    await this.checkShip(this.sender, 'SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG_OF_SALE_OF_SHIP')
+    let Product_sold_to_customer_or_PO_Receipt_on_Verification_of_Token = await this._stage.createStage('SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG')
+    return Product_sold_to_customer_or_PO_Receipt_on_Verification_of_Token
+  }
   async Ships_Goods_to_Customer(address_Product_sold_to_customer_or_PO_Receipt_on_Verification_of_Token) {
     this._user.checkUser(this.sender, 'RETAILER')
-    let checkShip = this._stage.getStageByAddress(address_Product_sold_to_customer_or_PO_Receipt_on_Verification_of_Token)
-    if (!checkShip || checkShip.type !== 'PRODUCT_SOLD_TO_CUSTOMER_OR_PO_RECEIPT_ON_VERIFICATION_OF_TOKEN')
-      throw 'PRODUCT_SOLD_TO_CUSTOMER_OR_PO_RECEIPT_ON_VERIFICATION_OF_TOKEN IS NOT EXIST'
+    let checkProduct_sold_to_customer_or_PO_Receipt_on_Verification_of_Token = this._stage.getStageByAddress(address_Product_sold_to_customer_or_PO_Receipt_on_Verification_of_Token)
+    if (!checkProduct_sold_to_customer_or_PO_Receipt_on_Verification_of_Token || checkProduct_sold_to_customer_or_PO_Receipt_on_Verification_of_Token.type !== 'SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG')
+      throw 'SALES_ORDER_GENERATED_FOR_RETAILER_OR_RECEIVE_PO_AND_VERIFY_TAG IS NOT EXIST'
     let Ships_Goods_to_Customer = await this._stage.createStage('SHIPS_GOODS_TO_CUSTOMER')
     return Ships_Goods_to_Customer
-
   }
-  // async Ships_Goods_to_Customer() {
-  //   await this.checkShip(this.sender, 'PRODUCT_SOLD_TO_CUSTOMER_OR_PO_RECEIPT_ON_VERIFICATION_OF_TOKEN')
-  //   let Ships_Goods_to_Customer = await this._stage.createStage('SHIPS_GOODS_TO_CUSTOMER')
-  //   return Ships_Goods_to_Customer
-  // }
 
   get_Ships_Goods_to_Customer() {
     return this._stage.getStageByType('SHIPS_GOODS_TO_CUSTOMER')
   }
 
   // --------------------Receipt_and_Verify_the_Product_and_track_history_using_Token---------------------------
-  //this.getShips_Goods_to_CustomerByAddress 
-  // async Receipt_and_Verify_the_Product_and_track_history_using_Token() {
-
-  //   await this.check_Ships_Goods_to_Customer(this.sender, 'SHIPS_GOODS_TO_CUSTOMER')
-  //   let Receipt_and_Verify_the_Product_and_track_history_using_Token = await this._stage.createStage('RECEIPT_AND_VERIFY_THE_PRODUCT_AND_TRACK_HISTORY')
-  //   this.setToAddress(Receipt_and_Verify_the_Product_and_track_history_using_Token.address)
-  //   return 'SUCCESS'
-  // }
-  async Ships_Goods_to_Customer(address_Ships_Goods_to_Customer) {
+ 
+  async Receipt_and_Verify_the_Product_and_track_history_using_Token(address_Ships_Goods_to_Customer) {
     this._user.checkUser(this.sender, 'CUSTOMER')
     let checkShips_Goods_to_Customer = this._stage.getStageByAddress(address_Ships_Goods_to_Customer)
     if (!checkShips_Goods_to_Customer || checkShips_Goods_to_Customer.type !== 'SHIPS_GOODS_TO_CUSTOMER')

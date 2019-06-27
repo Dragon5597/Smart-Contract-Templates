@@ -1,5 +1,5 @@
 import Contract from 'Contract'
-const types = ['SUPPLIER','CLIENT','WMS','OTM']
+const types = ['SUPPLIER','CLIENT_IS_ERP_SYSTEM','WMS_FOR_LSP','OTM']
 class User extends Contract {
   async createUser (type) {
     if (!types.includes(type)) throw 'CREATE USER FAIL'
