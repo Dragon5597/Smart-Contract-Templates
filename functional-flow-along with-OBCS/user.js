@@ -1,7 +1,7 @@
 import Contract from 'Contract'
-const types = ["PEOPLE","MACHINE"]
-class Tax extends Contract {
-  async createTax (type) {
+const types = ['ORACLE_SCM_CLOUD','ORACLE_PAAS_APPLICATION','ORACLE_BLOCKCHAIN_CLOUD_SERVICE']
+class User extends Contract {
+  async createUser (type) {
     if (!types.includes(type)) throw 'CREATE USER FAIL'
     const address = await this.generateAddress()
     console.log({ address })
@@ -13,15 +13,15 @@ class Tax extends Contract {
     this.accounts.push(rs)
     return address
   }
-  checkTax (address, type) {
-    let checkTax = this.getTaxByAddress(address)
-    if (!checkTax || checkTax.type !== type) throw `${type} IS NOT EXIST`
+  checkUser (address, type) {
+    let checkUser = this.getUserByAddress(address)
+    if (!checkUser || checkUser.type !== type) throw `${type} IS NOT EXIST`
     return true
   }
-  getTaxByAddress (address) {
+  getUserByAddress (address) {
     return this.accounts.find(account => account.address === address)
   }
-  getTaxByType (type) {
+  getUserByType (type) {
     let lists = []
     this.accounts.find(account => {
       if (account.type === type) lists.push(account)
@@ -29,4 +29,4 @@ class Tax extends Contract {
     return lists
   }
 }
-export default Tax;
+export default User;

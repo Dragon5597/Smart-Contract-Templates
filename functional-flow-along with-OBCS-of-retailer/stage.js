@@ -1,8 +1,6 @@
 import Contract from 'Contract'
-const types = ["PEOPLE","MACHINE"]
-class Tax extends Contract {
-  async createTax (type) {
-    if (!types.includes(type)) throw 'CREATE USER FAIL'
+class Stage extends Contract {
+  async createStage (type) {
     const address = await this.generateAddress()
     console.log({ address })
     let rs = {
@@ -13,15 +11,15 @@ class Tax extends Contract {
     this.accounts.push(rs)
     return address
   }
-  checkTax (address, type) {
-    let checkTax = this.getTaxByAddress(address)
-    if (!checkTax || checkTax.type !== type) throw `${type} IS NOT EXIST`
-    return true
+  async addStage (type) {
+    let address = await this.createStage(type)
+    this.setToAddress(address)
+    return { type: address }
   }
-  getTaxByAddress (address) {
+  getStageByAddress (address) {
     return this.accounts.find(account => account.address === address)
   }
-  getTaxByType (type) {
+  getStageByType (type) {
     let lists = []
     this.accounts.find(account => {
       if (account.type === type) lists.push(account)
@@ -29,4 +27,4 @@ class Tax extends Contract {
     return lists
   }
 }
-export default Tax;
+export default Stage;
