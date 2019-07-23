@@ -1,2 +1,2 @@
 # Singapore Education
-< img src="https://www.upsieutoc.com/images/2019/07/16/Untitled-Diagram-1.png">
+< img src="https://www.upsieutoc.com/images/2019/07/23/Untitled-Diagram.png">
