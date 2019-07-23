@@ -1,3 +1,3 @@
 # Amedican education 
-<img src="https://i.imgur.com/ssk7U5H.png">
+<img src="https://www.upsieutoc.com/images/2019/07/23/Untitled-Diagram-4.png">
 
