@@ -1,8 +1,6 @@
 import Contract from 'Contract'
-const types = ['PROMOTER_PITCHES_SERVICE_TO_MERCHANT']
-class User extends Contract {
-  async createUser (type) {
-    if (!types.includes(type)) throw 'CREATE USER FAIL'
+class Process extends Contract {
+  async createProcess (type) {
     const address = await this.generateAddress()
     console.log({ address })
     let rs = {
@@ -13,15 +11,15 @@ class User extends Contract {
     this.accounts.push(rs)
     return address
   }
-  checkUser (address, type) {
-    let checkFarm = this.getUserByAddress(address)
-    if (!checkFarm || checkFarm.type !== type) throw `${type} IS NOT EXIST`
-    return true
+  async addProcess (type) {
+    let address = await this.createProcess(type)
+    this.setToAddress(address)
+    return { type: address }
   }
-  getUserByAddress (address) {
+  getProcessByAddress (address) {
     return this.accounts.find(account => account.address === address)
   }
-  getUserByType (type) {
+  getProcessByType (type) {
     let lists = []
     this.accounts.find(account => {
       if (account.type === type) lists.push(account)
@@ -29,4 +27,4 @@ class User extends Contract {
     return lists
   }
 }
-export default User;
+export default Process;

@@ -1,5 +1,5 @@
 import Contract from 'Contract'
-const types = ['PROMOTER_PITCHES_SERVICE_TO_MERCHANT']
+const types = ['DATA_MANAGEMENT_CENTER']
 class User extends Contract {
   async createUser (type) {
     if (!types.includes(type)) throw 'CREATE USER FAIL'
