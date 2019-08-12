@@ -1,8 +1,6 @@
 import Contract from 'Contract'
-const types = ['INITIALIZING_RFID_VM']
 class Process extends Contract {
   async createProcess (type) {
-    if (!types.includes(type)) throw 'CREATE PROCESS FAIL'
     const address = await this.generateAddress()
     console.log({ address })
     let rs = {
@@ -13,10 +11,10 @@ class Process extends Contract {
     this.accounts.push(rs)
     return address
   }
-  checkProcess (address, type) {
-    let checkProcess = this.getProcessByAddress(address)
-    if (!checkProcess || checkProcess.type !== type) throw `${type} IS NOT EXIST`
-    return true
+  async addProcess (type) {
+    let address = await this.createStage(type)
+    this.setToAddress(address)
+    return { type: address }
   }
   getProcessByAddress (address) {
     return this.accounts.find(account => account.address === address)
