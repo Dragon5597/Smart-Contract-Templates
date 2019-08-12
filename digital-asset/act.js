@@ -1,5 +1,5 @@
 import Contract from 'Contract'
-const types = ['MANUFACTURE','BBD_SERVER','BBD_STORAGE','CSE30','CUSTOMER']
+const types = ['SELECTION_VIA_COLLECTION_DEVELOPMENT_POLICY','COPYRIGHT','METADATA_CREATION']
 class Act extends Contract {
   async createUser (type) {
     if (!types.includes(type)) throw 'CREATE ACT FAIL'
