@@ -34,20 +34,31 @@ class TokenMain extends Contract {
   ]
   static publicFuncs = [
     'Human',
+    'get_Human',
     'Process',
+    'get_Process',
     'Read_Ultrasonic_Sensor',
+    'get_Read_Ultrasonic_Sensor',
     'Human_Detected',
+    'get_Human_Detected',
     'get_YesHD',
     'get_NoHD',
     'Capture_Face_Image',
+    'get_Capture_Face_Image',
     'Face_Detection',
+    'get_Face_Detection',
     'Face_Recognition',
+    'get_Face_Recognition',
     'Recognized_Face',
+    'get_Recognized_Face',
     'get_Yes',
     'get_No',
     'Door_Unlock',
+    'get_Door_Unlock',
     'Wait_for_30_second',
+    'get_Wait_for_30_second',
     'Door_Lock',
+    'get_Door_Lock'
 
   ]
   static schemas = {

@@ -16,7 +16,6 @@ class TokenMain extends Contract {
     'get_Import_best_file_available_as_Archival_master',
     'get_Optimise_and_create_web_and_orther_derivatives',
     'get_Digital_Asset_Management',
-    'get_Secure_storage_of_Master_backup_procedures',
     'get_Link_web_images_to_Metadata',
   ]
   static authenticationFuncs = [
@@ -35,20 +34,33 @@ class TokenMain extends Contract {
   ]
   static publicFuncs = [
     'Selection_Via_Collection_Development_Policy',
+    'get_Selection_Via_Collection_Development_Policy',
     'Physical_Original',
+    'get_Physical_Original',
     'Digital_Original',
+    'get_Digital_Original',
     'Copyright',
+    'get_Copyright',
     'Copyright_Legislation',
+    'get_Copyright_Legislation',
     'Copyright_fair_Use_Police',
+    'get_Copyright_fair_Use_Police',
     'Metadata_Creation',
+    'get_Metadata_Creation',
     'Create_Metadata_Catalogue_record_for_Creation_Dublin_core',
     'Digitise_create_Archival_Master_file',
+    'get_Digitise_create_Archival_Master_file',
     'Create_Metadata_Catalogue_record_for_MARC',
+    'get_Create_Metadata_Catalogue_record_for_MARC',
     'Import_best_file_available_as_Archival_master',
+    'get_Import_best_file_available_as_Archival_master',
     'Optimise_and_create_web_and_orther_derivatives',
+    'get_Optimise_and_create_web_and_orther_derivatives',
     'Digital_Asset_Management',
+    'get_Digital_Asset_Management',
     'Secure_storage_of_Master_backup_procedures',
     'Link_web_images_to_Metadata',
+    'get_Link_web_images_to_Metadata',
     'Access_via_web_catalogue'
 
 
@@ -272,10 +284,8 @@ class TokenMain extends Contract {
   async Secure_storage_of_Master_backup_procedures() {
     await this.check_Optimise_and_create_web_and_orther_derivatives(this.sender, 'OPTIMISE_AND_CREATE_WEB_AND_ORTHER_DERIVATIVES')
     let Secure_storage = await this._process.createProcess('SECURE_STORAGE_OF_MASTER_BACKUP_PROCEDURES')
-    return Secure_storage
-  }
-  get_Secure_storage_of_Master_backup_procedures() {
-    return this._process.getProcessByType('SECURE_STORAGE_OF_MASTER_BACKUP_PROCEDURES')
+    this.setToAddress(Secure_storage.address)
+    return 'SUCCESS'
   }
   // --------------------Link_web_images_to_Metadata---------------------------
   check_Link_web_images_to_Metadata(address) {
@@ -306,10 +316,9 @@ class TokenMain extends Contract {
   async Access_via_web_catalogue() {
     await this.check_Optimise_and_create_web_and_orther_derivatives(this.sender, 'OPTIMISE_AND_CREATE_WEB_AND_ORTHER_DERIVATIVES')
     let access = await this._process.createProcess('ACCESS_VIA_WEB_CATALOGUE')
-    return ascess
+    this.setToAddress(access.address)
+    return 'SUCCESS'
   }
-  get_Access_via_web_catalogue() {
-    return this._process.getProcessByType('ACCESS_VIA_WEB_CATALOGUE')
-  }
+ 
 }
 export default TokenMain;

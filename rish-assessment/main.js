@@ -19,7 +19,6 @@ class TokenMain extends Contract {
     'get_Physical',
     'get_Vulnerabilities',
     'get_Rish_Assessment',
- 
   ]
   static authenticationFuncs = [
     'Interview',
@@ -35,29 +34,41 @@ class TokenMain extends Contract {
     'Physical',
     'Rish_Assessment',
     'Rish_Mitigation_Recommenda'
-
   ]
   static publicFuncs = [
     'Document_Review',
+    'get_Document_Review',
     'Conceptual_Threats',
+    'get_Conceptual_Threats',
     'Liability_Issues',
+    'get_Liability_Issues',
     'Light',
+    'get_Light',
     'Interview',
+    'get_Interview',
     'Assets',
+    'get_Assets',
     'Threats',
+    'get_Threats',
     'Crimes_and_Security_Incident',
+    'get_Crimes_and_Security_Incident',
     'Security_Personnel',
+    'get_Security_Personnel',
     'Policies_and_Training',
+    'get_Policies_and_Training',
     'Operational',
+    'get_Operational',
     'Electronic_Systems',
+    'get_Electronic_Systems',
     'Design_and_Barriers',
+    'get_Design_and_Barriers',
     'Physical',
+    'get_Physical',
     'Vulnerabilities',
+    'get_Vulnerabilities',
     'Rish_Assessment',
+    'get_Rish_Assessment',
     'Rish_Mitigation_Recommendations_Trade_Offs_and_Options'
-
-
-
   ]
   static schemas = {
     name: {
@@ -84,7 +95,7 @@ class TokenMain extends Contract {
   }
   //---------------------Document_Review------------------------------
   async Document_Review() {
-    let  Document= await this._act.createAct('DOCUMET_REVIEW')
+    let Document = await this._act.createAct('DOCUMET_REVIEW')
     return Document
   }
   get_Document_Review() {
@@ -92,7 +103,7 @@ class TokenMain extends Contract {
     return Document
   }
   async Conceptual_Threats() {
-    let  Conceptual_Threats= await this._act.createAct('CONCEPTUAL_THREATS')
+    let Conceptual_Threats = await this._act.createAct('CONCEPTUAL_THREATS')
     return Conceptual_Threats
   }
   get_Conceptual_Threats() {
@@ -100,7 +111,7 @@ class TokenMain extends Contract {
     return Conceptual_Threats
   }
   async Liability_Issues() {
-    let  Liability_Issues= await this._act.createAct('LIABILITY_ISSUES')
+    let Liability_Issues = await this._act.createAct('LIABILITY_ISSUES')
     return Liability_Issues
   }
   get_Liability_Issues() {
@@ -108,7 +119,7 @@ class TokenMain extends Contract {
     return Liability_Issues
   }
   async Light() {
-    let  Light= await this._act.createAct('LIGHT')
+    let Light = await this._act.createAct('LIGHT')
     return Light
   }
   get_Light() {
@@ -133,8 +144,8 @@ class TokenMain extends Contract {
   get_Interview() {
     return this._process.getProcessByType('INTERVIEW')
   }
-   //----------Assets---------------------------
-   checkAssets(address) {
+  //----------Assets---------------------------
+  checkAssets(address) {
     let checkAssets = this.get_AssetsByAddress(address)
     if (!checkAssets || checkAssets.type !== 'ASSETS') throw `ASSETS IS NOT EXIST`
     return true
@@ -186,6 +197,9 @@ class TokenMain extends Contract {
     await this.checkACT1(this.sender, 'CRIMES_AND_SECURITY_INCIDENT_OR_ASSETS')
     let Threats = await this._process.createProcess('THREATS')
     return Threats
+  }
+  get_Threats() {
+    return this._process.getProcessByType('THREATS')
   }
   // --------------------Security_Personnel---------------------------
   check_Security_Personnel(address) {
@@ -276,7 +290,7 @@ class TokenMain extends Contract {
 
   check_Physical(address) {
     let check_Physical = this.get_PhysicalByAddress(address)
-    if (!check_Physical|| check_Physical.type !== 'PHYSICAL') throw `PHYSICAL IS NOT EXIST`
+    if (!check_Physical || check_Physical.type !== 'PHYSICAL') throw `PHYSICAL IS NOT EXIST`
     return true
   }
   get_PhysicalByAddress(address) {
@@ -290,40 +304,40 @@ class TokenMain extends Contract {
   get_Physical() {
     return this._process.getProcessByType('PHYSICAL')
   }
-    // --------------------Vulnerabilities---------------------------
-    checkACT2(address) {
-      this.check_Threats = this.get_ThreatsByAddress(address);
-      this.check_Operational= this.get_OperationalByAddress(address);
-      this.check_Physical=this.get_PhysicalByAddress(address);
-      if (this.check_Threats.type == 'THREATS') {
-        return true;
-      }
-      else if (this.check_Operational.type == 'OPERATIONAL') {
-        return true;
-      }
-      else if (this.check_Physical.type == 'PHYSICAL') {
-        return true;
-      }
-      else {
-        throw `THREATS_OR_OPERATIONAL_OR_PHYSICAL IS NOT EXIST`;
-      }
+  // --------------------Vulnerabilities---------------------------
+  checkACT2(address) {
+    this.check_Threats = this.get_ThreatsByAddress(address);
+    this.check_Operational = this.get_OperationalByAddress(address);
+    this.check_Physical = this.get_PhysicalByAddress(address);
+    if (this.check_Threats.type == 'THREATS') {
+      return true;
     }
-    check_Vulnerabilities(address) {
-      let check_Vulnerabilities = this.get_VulnerabilitiesByAddress(address)
-      if (!check_Vulnerabilities || check_Vulnerabilities.type !== 'VULNERABILITIES') throw `VULNERABILITIES IS NOT EXIST`
-      return true
+    else if (this.check_Operational.type == 'OPERATIONAL') {
+      return true;
     }
-    get_VulnerabilitiesByAddress(address) {
-      return this.accounts.find(account => account.address === address)
+    else if (this.check_Physical.type == 'PHYSICAL') {
+      return true;
     }
-    async Vulnerabilities() {
-      await this.checkACT2(this.sender, 'THREATS_OR_OPERATIONAL_OR_PHYSICAL')
-      let Vulnerabilities = await this._process.createProcess('VULNERABILITIES')
-      return Vulnerabilities
+    else {
+      throw `THREATS_OR_OPERATIONAL_OR_PHYSICAL IS NOT EXIST`;
     }
-    get_Vulnerabilities() {
-      return this._process.getProcessByType('VULNERABILITIES')
-    }
+  }
+  check_Vulnerabilities(address) {
+    let check_Vulnerabilities = this.get_VulnerabilitiesByAddress(address)
+    if (!check_Vulnerabilities || check_Vulnerabilities.type !== 'VULNERABILITIES') throw `VULNERABILITIES IS NOT EXIST`
+    return true
+  }
+  get_VulnerabilitiesByAddress(address) {
+    return this.accounts.find(account => account.address === address)
+  }
+  async Vulnerabilities() {
+    await this.checkACT2(this.sender, 'THREATS_OR_OPERATIONAL_OR_PHYSICAL')
+    let Vulnerabilities = await this._process.createProcess('VULNERABILITIES')
+    return Vulnerabilities
+  }
+  get_Vulnerabilities() {
+    return this._process.getProcessByType('VULNERABILITIES')
+  }
   // --------------------Rish_Assessment---------------------------
   check_Rish_Assessment(address) {
     let check_Rish_Assessment = this.get_Rish_AssessmentByAddress(address)
@@ -345,7 +359,8 @@ class TokenMain extends Contract {
   async Rish_Mitigation_Recommendations_Trade_Offs_and_Options() {
     await this.check_Rish_Assessment(this.sender, 'RISH_ASSESSMENT')
     let Rish_Mitigation = await this._process.createProcess('RISH_MITIGATION_RECOMMENTDATIONS_TRADE_OFFS_AND_OPTIONS')
-    return Rish_Mitigation
+    this.setToAddress(Rish_Mitigation.address)
+    return 'SUCCESS'
   }
 }
 export default TokenMain;
