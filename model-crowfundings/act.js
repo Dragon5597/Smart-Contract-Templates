@@ -1,7 +1,7 @@
 import Contract from 'Contract'
-const types = ['DOCUMET_REVIEW','CONCEPTUAL_THREATS','LIABILITY_ISSUES','LIGHT']
+const types = ['ORTHER','DONATION','PASSIVE_INVESTMENT','ACTIVE_INVESTMENT']
 class Act extends Contract {
-  async createAct (type) {
+  async createUser (type) {
     if (!types.includes(type)) throw 'CREATE ACT FAIL'
     const address = await this.generateAddress()
     console.log({ address })
