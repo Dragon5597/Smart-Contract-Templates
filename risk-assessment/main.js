@@ -18,7 +18,7 @@ class TokenMain extends Contract {
     'get_Design_and_Barriers',
     'get_Physical',
     'get_Vulnerabilities',
-    'get_Rish_Assessment',
+    'get_Risk_Assessment',
   ]
   static authenticationFuncs = [
     'Interview',
@@ -32,7 +32,7 @@ class TokenMain extends Contract {
     'Electronic_Systems',
     'Design_and_Barriers',
     'Physical',
-    'Rish_Assessment',
+    'Risk_Assessment',
     'Rish_Mitigation_Recommenda'
   ]
   static publicFuncs = [
@@ -66,14 +66,14 @@ class TokenMain extends Contract {
     'get_Physical',
     'Vulnerabilities',
     'get_Vulnerabilities',
-    'Rish_Assessment',
-    'get_Rish_Assessment',
+    'Risk_Assessment',
+    'get_Risk_Assessment',
     'Rish_Mitigation_Recommendations_Trade_Offs_and_Options'
   ]
   static schemas = {
     name: {
       type: String,
-      default: 'SECURIITY RISH ASSESSMENT'
+      default: 'SECURIITY RISK ASSESSMENT'
     },
     accounts: [
       {
@@ -126,7 +126,6 @@ class TokenMain extends Contract {
     let Light = this._act.getActByType('LIGHT')
     return Light
   }
-
   //----------Interview---------------------------
   check_Interview(address) {
     let check_Interview = this.get_InterviewByAddress(address)
@@ -338,26 +337,26 @@ class TokenMain extends Contract {
   get_Vulnerabilities() {
     return this._process.getProcessByType('VULNERABILITIES')
   }
-  // --------------------Rish_Assessment---------------------------
-  check_Rish_Assessment(address) {
-    let check_Rish_Assessment = this.get_Rish_AssessmentByAddress(address)
-    if (!check_Rish_Assessment || check_Rish_Assessment.type !== 'RISH_ASSESSMENT') throw `RISH_ASSESSMENT IS NOT EXIST`
+  // --------------------Risk_Assessment---------------------------
+  check_Risk_Assessment(address) {
+    let check_Risk_Assessment = this.get_Risk_AssessmentByAddress(address)
+    if (!check_Risk_Assessment || check_Risk_Assessment.type !== 'RISK_ASSESSMENT') throw `RISK_ASSESSMENT IS NOT EXIST`
     return true
   }
-  get_Rish_AssessmentByAddress(address) {
+  get_Risk_AssessmentByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
-  async Rish_Assessment() {
+  async Risk_Assessment() {
     await this.check_Vulnerabilities(this.sender, 'VULNERABILITIES')
-    let link = await this._process.createProcess('RISH_ASSESSMENT')
-    return link
+    let Risk_Assessment = await this._process.createProcess('RISK_ASSESSMENT')
+    return Risk_Assessment
   }
   get_Rish_Assessment() {
     return this._process.getProcessByType('RISH_ASSESSMENT')
   }
   // --------------------Rish_Mitigation_Recommendations_Trade_Offs_and_Options---------------------------
   async Rish_Mitigation_Recommendations_Trade_Offs_and_Options() {
-    await this.check_Rish_Assessment(this.sender, 'RISH_ASSESSMENT')
+    await this.check_Risk_Assessment(this.sender, 'RISK_ASSESSMENT')
     let Rish_Mitigation = await this._process.createProcess('RISH_MITIGATION_RECOMMENTDATIONS_TRADE_OFFS_AND_OPTIONS')
     this.setToAddress(Rish_Mitigation.address)
     return 'SUCCESS'

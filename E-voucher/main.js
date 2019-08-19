@@ -4,6 +4,23 @@ import User from './user'
 
 class TokenMain extends Contract {
   static viewFuncs = [
+    'get_Staff',
+    'get_Create_Control_Groups',
+    'get_Enter_Vouchers',
+    'get_Enter_Vouchers_or_Update_Vouchers',
+    'get_Unpost_Vouchers_or_Enter_Vouchers_or_Match_Approve_Vouchers',
+    'get_Update_Vouchers',
+    'get_Check_Document_Tokerance',
+    'get_Budget_Check_Vouchers',
+    'get_Budget_Check_Vouchers_or_Enter_Vouchers',
+    'get_Match_Approve_Vouchers',
+    'get_Pay_Vouchers',
+    'get_Post_Vouchers',
+    'get_UnpostVouchers',
+    'get_Post_Payments',
+    'get_Post_Vouchers_or_Post_Payment',
+    'get_Entry_Events',
+    'get_Entry_Events_or_Post_Vouchers',
   ]
   static authenticationFuncs = [
 
@@ -29,24 +46,41 @@ class TokenMain extends Contract {
   ]
   static publicFuncs = [
     'Staff',
+    'get_Staff',
     'Create_Control_Groups',
+    'get_Create_Control_Groups',
     'Enter_Vouchers',
+    'get_Enter_Vouchers',
     'Enter_Vouchers_or_Update_Vouchers',
+    'get_Enter_Vouchers_or_Update_Vouchers',
     'Delete_Voichers',
     'Unpost_Vouchers_or_Enter_Vouchers_or_Match_Approve_Vouchers',
+    'get_Unpost_Vouchers_or_Enter_Vouchers_or_Match_Approve_Vouchers',
     'Update_Vouchers',
+    'get_Update_Vouchers',
     'Check_Document_Tokerance',
+    'get_Check_Document_Tokerance',
     'Budget_Check_Vouchers',
+    'get_Budget_Check_Vouchers',
     'Budget_Check_Vouchers_or_Enter_Vouchers',
+    'get_Budget_Check_Vouchers_or_Enter_Vouchers',
     'Match_Approve_Vouchers',
+    'get_Match_Approve_Vouchers',
     'Pay_Vouchers',
+    'get_Pay_Vouchers',
     'Post_Vouchers',
+    'get_Post_Vouchers',
     'UnpostVouchers',
+    'get_UnpostVouchers',
     'Close_Vouchers',
     'Post_Payments',
+    'get_Post_Payments',
     'Post_Vouchers_or_Post_Payment',
+    'get_Post_Vouchers_or_Post_Payment',
     'Entry_Events',
+    'get_Entry_Events',
     'Entry_Events_or_Post_Vouchers',
+    'get_Entry_Events_or_Post_Vouchers',
     'Generate_Joumals'
   ]
   static schemas = {
@@ -73,7 +107,6 @@ class TokenMain extends Contract {
     this._user = new User(data)
   }
   //---------------------Staff------------------------------
-
   async Staff() {
     let staff = await this._user.createUser('STAFF')
     return staff
@@ -82,20 +115,15 @@ class TokenMain extends Contract {
     let staff = this._user.getUserByType('STAFF')
     return staff
   }
-
-
   // --------------------Create_Control_Groups---------------------------
-
   async Create_Control_Groups() {
     this._user.checkUser(this.sender, 'STAFF')
     let control = await this._process.createProcess('CREATE_CONTROL_GROUPS')
     return control
-
   }
   get_Create_Control_Groups() {
     return this._process.getProcessByType('CREATE_CONTROL_GROUPS')
   }
-
   // --------------------Enter_Voichers--------------------------
   check_Enter_Vouchers(address) {
     let check_Enter_Vouchers = this.get_Enter_VouchersByAddress(address)
@@ -112,13 +140,11 @@ class TokenMain extends Contract {
       throw 'CREATE_CONTROL_GROUPS IS NOT EXIST'
     let enter = await this._process.createProcess('ENTER_VOUCHERS')
     return enter
-
   }
   get_Enter_Vouchers() {
     return this._process.getProcessByType('ENTER_VOUCHERS')
   }
   // --------------------Delete_Voichers--------------------------
-
   check_Process2(address) {
     this.check_Enter_Vouchers = this.get_Enter_VouchersByAddress(address);
     this.check_Update_Vouchers = this.get_Update_VouchersByAddress(address);
@@ -131,26 +157,23 @@ class TokenMain extends Contract {
     else {
       throw `ENTER_VOUCHERS_OR_UPDATE_VOUCHERS_FOR_CHECK NOT EXIST`;
     }
-    // if(this.check_Enter_Vouchers.type !== 'ENTER_VOUCHERS' || this.check_Update_Vouchers.type !== 'UPDATE_VOUCHERS' )
-    //   throw `ENTER_VOUCHERS_OR_UPDATE_VOUCHERS_FOR_CHECK NOT EXIST`;
-    // return true;
-
   }
-
   async Enter_Vouchers_or_Update_Vouchers() {
     await this.check_Process2(this.sender, 'ENTER_VOUCHERS_OR_UPDATE_VOUCHERS_FOR_CHECK')
     let process2 = await this._process.createProcess('ENTER_VOUCHERS_OR_UPDATE_VOUCHERS')
     return process2
   }
-
+  get_Enter_Vouchers_or_Update_Vouchers() {
+    return this._process.getProcessByType('ENTER_VOUCHERS_OR_UPDATE_VOUCHERS')
+  }
   async Delete_Voichers(address_Enter_Vouchers_or_Update_Vouchers) {
     this._user.checkUser(this.sender, 'STAFF')
     let check_Process2 = this._process.getProcessByAddress(address_Enter_Vouchers_or_Update_Vouchers)
     if (!check_Process2 || check_Process2.type !== 'ENTER_VOUCHERS_OR_UPDATE_VOUCHERS')
       throw 'ENTER_VOUCHERS_OR_UPDATE_VOUCHERS IS NOT EXIST'
     let Delete_Vouchers = await this._process.createProcess('DELETE_EVENTS')
-    return Delete_Vouchers
-
+    this.setToAddress(Delete_Vouchers.address)
+    return { Delete_Vouchers }
   }
   // --------------------Update_Vouchers--------------------------
   checkProcess(address) {
@@ -176,6 +199,9 @@ class TokenMain extends Contract {
     let process = await this._process.createProcess('UNPOST_VOUCHERS_OR_ENTER_VOUCHERS_OR_MATCH_APPROVE_VOUCHERS')
     return process
   }
+  get_Unpost_Vouchers_or_Enter_Vouchers_or_Match_Approve_Vouchers() {
+    return this._process.getProcessByType('UNPOST_VOUCHERS_OR_ENTER_VOUCHERS_OR_MATCH_APPROVE_VOUCHERS')
+  }
   check_Update_Vouchers(address) {
     let check_Update_Vouchers = this.get_Update_VouchersByAddress(address)
     if (!check_Update_Vouchers || check_Update_Vouchers.type !== 'UPDATE_VOUCHERS') throw `UPDATE_VOUCHERS IS NOT EXIST`
@@ -184,7 +210,6 @@ class TokenMain extends Contract {
   get_Update_VouchersByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
-
   async Update_Vouchers(address_Create_Control_Groups) {
     this._user.checkUser(this.sender, 'STAFF')
     let check_Process = this._process.getProcessByAddress(address_Create_Control_Groups)
@@ -192,7 +217,6 @@ class TokenMain extends Contract {
       throw 'UNPOST_VOUCHERS_OR_ENTER_VOUCHERS_OR_MATCH_APPROVE_VOUCHERS IS NOT EXIST'
     let enter = await this._process.createProcess('UPDATE_VOUCHERS')
     return enter
-
   }
   get_Update_Vouchers() {
     return this._process.getProcessByType('UPDATE_VOUCHERS')
@@ -205,7 +229,6 @@ class TokenMain extends Contract {
       throw 'UPDATE_VOUCHERS IS NOT EXIST'
     let check = await this._process.createProcess('CHECK_DOCUMENT_TOKERANCE')
     return check
-
   }
   get_Check_Document_Tokerance() {
     return this._process.getProcessByType('CHECK_DOCUMENT_TOKERANCE')
@@ -226,7 +249,6 @@ class TokenMain extends Contract {
       throw 'CHECK_DOCUMENT_TOKERANCE IS NOT EXIST'
     let check = await this._process.createProcess('BUDGET_CHECK_VOUCHERS')
     return check
-
   }
   get_Budget_Check_Vouchers() {
     return this._process.getProcessByType('BUDGET_CHECK_VOUCHERS')
@@ -250,7 +272,9 @@ class TokenMain extends Contract {
     let process1 = await this._process.createProcess('BUDGET_CHECK_VOUCHERS_OR_ENTER_VOUCHERS')
     return process1
   }
-
+  get_Budget_Check_Vouchers_or_Enter_Vouchers() {
+    return this._process.getProcessByType('BUDGET_CHECK_VOUCHERS_OR_ENTER_VOUCHERS')
+  }
   check_Match_Approve_Vouchers(address) {
     let check_Match_Approve_Vouchers = this.get_Match_Approve_VouchersByAddress(address)
     if (!check_Match_Approve_Vouchers || check_Match_Approve_Vouchers.type !== 'MATCH_APPROVE_VOUCHERS') throw `MATCH_APPROVE_VOUCHERS IS NOT EXIST`
@@ -266,7 +290,6 @@ class TokenMain extends Contract {
       throw 'BUDGET_CHECK_VOUCHERS_OR_ENTER_VOUCHERS IS NOT EXIST'
     let enter = await this._process.createProcess('MATCH_APPROVE_VOUCHERS')
     return enter
-
   }
   get_Match_Approve_Vouchers() {
     return this._process.getProcessByType('MATCH_APPROVE_VOUCHERS')
@@ -279,7 +302,6 @@ class TokenMain extends Contract {
       throw 'MATCH_APPROVE_VOUCHERS IS NOT EXIST'
     let pay = await this._process.createProcess('PAY_VOUCHERS')
     return pay
-
   }
   get_Pay_Vouchers() {
     return this._process.getProcessByType('PAY_VOUCHERS')
@@ -300,7 +322,6 @@ class TokenMain extends Contract {
       throw 'MATCH_APPROVE_VOUCHERS IS NOT EXIST'
     let pay = await this._process.createProcess('POST_VOUCHERS')
     return pay
-
   }
   get_Post_Vouchers() {
     return this._process.getProcessByType('POST_VOUCHERS')
@@ -321,9 +342,8 @@ class TokenMain extends Contract {
       throw 'POST_VOUCHERS IS NOT EXIST'
     let Unpost_Vouchers = await this._process.createProcess('UNPOST_VOUCHERS')
     return Unpost_Vouchers
-
   }
-  get_Unpost_Vouchers() {
+  get_UnpostVouchers() {
     return this._process.getProcessByType('UNPOST_VOUCHERS')
   }
   // --------------------Close_Vouchers--------------------------
@@ -333,11 +353,8 @@ class TokenMain extends Contract {
     if (!check_Post_Vouchers || check_Post_Vouchers.type !== 'POST_VOUCHERS')
       throw 'POST_VOUCHERS IS NOT EXIST'
     let close = await this._process.createProcess('CLOSE_VOUCHERS')
-    return close
-
-  }
-  get_Close_Vouchers() {
-    return this._process.getProcessByType('CLOSE_VOUCHERS')
+    this.setToAddress(close.address)
+    return { close }
   }
   // --------------------Post_Payments--------------------------
   check_Post_Payments(address) {
@@ -355,7 +372,6 @@ class TokenMain extends Contract {
       throw 'PAY_VOUCHERS IS NOT EXIST'
     let payment = await this._process.createProcess('POST_PAYMENT')
     return payment
-
   }
   get_Post_Payments() {
     return this._process.getProcessByType('POST_PAYMENT')
@@ -379,6 +395,9 @@ class TokenMain extends Contract {
     let process3 = await this._process.createProcess('POST_VOUCHERS_OR_POST_PAYMENT')
     return process3
   }
+  get_Post_Vouchers_or_Post_Payment() {
+    return this._process.getProcessByType('POST_VOUCHERS_OR_POST_PAYMENT')
+  }
 
   check_Entry_Events(address) {
     let check_Entry_Events = this.get_Entry_EventsByAddress(address)
@@ -395,7 +414,6 @@ class TokenMain extends Contract {
       throw 'POST_VOUCHERS_OR_POST_PAYMENT IS NOT EXIST'
     let entry = await this._process.createProcess('ENTRY_EVENTS')
     return entry
-
   }
   get_Entry_Events() {
     return this._process.getProcessByType('ENTRY_EVENTS')
@@ -419,7 +437,9 @@ class TokenMain extends Contract {
     let process4 = await this._process.createProcess('POST_VOUCHERS_OR_ENTRY_EVENTS')
     return process4
   }
-
+  get_Entry_Events_or_Post_Vouchers() {
+    return this._process.getProcessByType('POST_VOUCHERS_OR_ENTRY_EVENTS')
+  }
   async Generate_Joumals(address_Entry_Events_or_Post_Vouchers) {
     this._user.checkUser(this.sender, 'STAFF')
     let check_Process3 = this._process.getProcessByAddress(address_Entry_Events_or_Post_Vouchers)
@@ -427,10 +447,7 @@ class TokenMain extends Contract {
       throw 'POST_VOUCHERS_OR_ENTRY_EVENTS IS NOT EXIST'
     let Generate = await this._process.createProcess('GENERATE_JOUMALS')
     this.setToAddress(Generate.address)
-    return 'SUCCESS'
+    return { Generate }
   }
-
-
-
 }
 export default TokenMain;

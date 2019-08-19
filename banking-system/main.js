@@ -1,5 +1,5 @@
 import Contract from 'Contract'
-import Problem from './problem'
+import Act from './act'
 import Process from './process'
 class TokenMain extends Contract {
   static viewFuncs = [
@@ -11,7 +11,7 @@ class TokenMain extends Contract {
     'get_Deposit_book',
     'get_Depositor',
     'get_Deposit_book_deposit_and_with_draw_slip',
-    'get_Business_Category',
+    'get_Business_Category1',
   ]
   static authenticationFuncs = [
     'Deposit_process',
@@ -21,7 +21,7 @@ class TokenMain extends Contract {
     'Deposit_book',
     'Depositor',
     'Deposit_book_deposit_and_with_draw_slip',
-    'Business_Category',
+    'Business_Category1',
     'With_draw_slip',
     'Deposit_book_deposit_slip',
   ]
@@ -32,18 +32,20 @@ class TokenMain extends Contract {
     'get_Deposit_process',
     'With_draw_process',
     'get_With_draw_process',
+    'Account',
+    'get_Acount',
     'Cash_library',
     'get_Cash_library',
     'Deposit_book_cash',
     'get_Deposit_book_cash',
-    'Deposit_book',
-    'get_Deposit_book',
     'Depositor',
     'get_Depositor',
+    'Deposit_book',
+    'get_Deposit_book',
     'Deposit_book_deposit_and_with_draw_slip',
     'get_Deposit_book_deposit_and_with_draw_slip',
-    'Business_Category',
-    'get_Business_Category',
+    'Business_Category1',
+    'get_Business_Category1',
     'With_draw_slip_deposit_book',
     'Deposit_book_deposit_slip'
   ]
@@ -67,18 +69,16 @@ class TokenMain extends Contract {
   }
   constructor(data) {
     super(data)
-    this._problem = new Ploblem(data)
+    this._act = new Act(data)
     this._process = new Process(data)
   }
   //---------------------Interest_document------------------------------
-
   async Interest_document() {
-    let Interes = await this._problem.createPre_school('INTEREST_DOCUMENT')
+    let Interes = await this._act.createAct('INTEREST_DOCUMENT')
     return Interes
-
   }
   get_Interest_document() {
-    let Interes = this._problem.getProblemByType('INTEREST_DOCUMENT')
+    let Interes = this._act.getActByType('INTEREST_DOCUMENT')
     return Interes
   }
   // --------------------Deposit_process---------------------------
@@ -90,13 +90,26 @@ class TokenMain extends Contract {
   getDeposit_processByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
+  checkProcess2(address) {
+    this.checkAccount = this.getDeposit_processByAddress(address);
+    this._act.checkAct = this._act.getActByAddress(address);
+    if (this.checkAccount.type == 'ACCOUNT') {
+      return true;
+    }
+    else if (this._act.checkAct.type == 'INTEREST_DOCUMENT') {
+      return true;
+    }
+    else {
+      throw `ACCOUNT_OR_INTEREST_DOCUMENT IS NOT EXIST`;
+    }
+  }
   async Deposit_process() {
-    await this._problem.checkProblem(this.sender, 'INTEREST_DOCUMENT')
+    await this.checkProcess2(this.sender, 'ACCOUNT_OR_INTEREST_DOCUMENT')
     let deposit = await this._process.createProcess('DEPOSIT_PROCESS')
     return deposit
   }
   get_Deposit_process() {
-    return this._problem.getProblemByType('DEPOSIT_PROCESS')
+    return this._process.getProcessByType('DEPOSIT_PROCESS')
   }
   // --------------------Cash_library---------------------------
   checkCash_library(address) {
@@ -109,11 +122,11 @@ class TokenMain extends Contract {
   }
   async Cash_library() {
     await this.checkDeposit_process(this.sender, 'DEPOSIT_PROCESS')
-    let nd2_grade = awaitthis._process.createProcess('CASH_LIBRARY')
-    return nd2_grade
+    let Cash_library = await this._process.createProcess('CASH_LIBRARY')
+    return Cash_library
   }
   get_Cash_library() {
-    return this._problem.getProblemByType('CASH_LIBRARY')
+    return this._process.getProcessByType('CASH_LIBRARY')
   }
   // --------------------Deposit_book---------------------------
   checkDeposit_book(address) {
@@ -126,16 +139,13 @@ class TokenMain extends Contract {
   }
   async Deposit_book() {
     await this.checkDeposit_process(this.sender, 'DEPOSIT_PROCESS')
-    let rd3_grade = await this._process.createProcess('DEPOSIT_BOOK')
-    return rd3_grade
+    let Deposit_book = await this._process.createProcess('DEPOSIT_BOOK')
+    return Deposit_book
   }
-
   get_Deposit_book() {
-   return this._problem.getProblemByType('3RD_GRADE')
+    return this._process.getProcessByType('3RD_GRADE')
   }
-
   // --------------------With_draw_process--------------------------
-
   checkWith_draw_process(address) {
     let checkWith_draw_process = this.getWith_draw_processByAddress(address)
     if (!checkWith_draw_process || checkWith_draw_process.type !== 'WITH_DRAW_PROCESS') throw `WITH_DRAW_PROCESS IS NOT EXIST`
@@ -144,16 +154,31 @@ class TokenMain extends Contract {
   getWith_draw_processByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
+  checkProcess1(address) {
+    this.checkCash_library = this.getWith_draw_processByAddress(address);
+    this.checkAccount = this.getDeposit_processByAddress(address);
+    this._act.checkAct = this._act.getActByAddress(address);
+    if (this.checkCash_library.type == 'CASH_LIBRARY') {
+      return true;
+    }
+    else if (this.checkAccount.type == 'ACCOUNT') {
+      return true;
+    }
+    else if (this._act.checkAct.type == 'INTEREST_DOCUMENT') {
+      return true;
+    }
+    else {
+      throw `CASH_LIBRARY_OR_ACCOUNT_OR_INTEREST_DOCUMENT IS NOT EXIST`;
+    }
+  }
   async With_draw_process() {
-    await this._problem.checkProblem(this.sender, 'INTEREST_DOCUMENT')
+    await this.checkProcess1(this.sender, 'CASH_LIBRARY_OR_ACCOUNT_OR_INTEREST_DOCUMENT')
     let draw = await this._process.createProcess('WITH_DRAW_PROCESS')
     return draw
   }
-
   get_With_draw_process() {
-    return this._problem.getProblemByType('WITH_DRAW_PROCESS')
+    return this._process.getProcessByType('WITH_DRAW_PROCESS')
   }
-
   // --------------------Deposit_book_cash---------------------------
   checkDeposit_book_cash(address) {
     let checkDeposit_book_cash = this.getDeposit_book_cashByAddress(address)
@@ -164,17 +189,48 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async Deposit_book_cash() {
-    await this.checkDeposit_process(this.sender, 'DEPOSIT_PROCESS')
+    await this.checkWith_draw_process(this.sender, 'WITH_DRAW_PROCESS')
     let Deposit1 = await this._process.createProcess('DEPOSIT_BOOK_CASH')
     return Deposit1
   }
   get_Deposit_book_cash() {
-    return this._problem.getProblemByType('DEPOSIT_BOOK_CASH')
+    return this._process.getProcessByType('DEPOSIT_BOOK_CASH')
+  }
+  // --------------------Account---------------------------
+  checkAccount(address) {
+    let checkAccount = this.getAccountByAddress(address)
+    if (!checkAccount || checkAccount.type !== 'ACCOUNT') throw `ACCOUNT IS NOT EXIST`
+    return true
+  }
+  getAccountByAddress(address) {
+    return this.accounts.find(account => account.address === address)
+  }
+  checkProcess(address) {
+    this.checkWith_draw_process = this.getWith_draw_processByAddress(address);
+    this.checkDeposit_process = this.getDeposit_processByAddress(address);
+
+    if (this.checkWith_draw_process.type == 'WITH_DRAW_PROCESS') {
+      return true;
+    }
+    else if (this.checkDeposit_process.type == 'DEPOSIT_PROCESS') {
+      return true;
+    }
+    else {
+      throw `WITH_DRAW_PROCESS_OR_DEPOSIT_PROCESS IS NOT EXIST`;
+    }
+  }
+  async Account() {
+    await this.checkProcess(this.sender, 'WITH_DRAW_PROCESS_OR_DEPOSIT_PROCESS')
+    let Deposit2 = await this._process.createProcess('ACCOUNT')
+    return Deposit2
+  }
+  get_Account() {
+    return this._process.getProcessByType('ACCOUNT')
   }
   // --------------------Depositor ---------------------------
   checkDeposit(address) {
     this.checkDeposit_book_cash = this.getDeposit_book_cashByAddress(address);
-    this.checkDeposit = this.geDeposit_bookrByAddress(address);
+    this.checkDeposit = this.getDeposit_bookByAddress(address);
 
     if (this.checkDeposit_book_cash.type == 'DEPOSIT_BOOK_CASH') {
       return true;
@@ -185,7 +241,6 @@ class TokenMain extends Contract {
     else {
       throw `DEPOSIT_BOOK_CASH_OR_DEPOSIT_BOOK IS NOT EXIST`;
     }
-
   }
   checkDepositor(address) {
     let checkDepositor = this.getDepositorByAddress(address)
@@ -201,7 +256,7 @@ class TokenMain extends Contract {
     return Depositor
   }
   get_Depositor() {
-    return this._problem.getProblemByType('DEPOSITOR')
+    return this._process.getProcessByType('DEPOSITOR')
   }
   // --------------------Deposit_book_deposit_and_with_draw_slip ---------------------------
   checkDeposit_book_deposit_and_with_draw_slip(address) {
@@ -213,43 +268,43 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async Deposit_book_deposit_and_with_draw_slip() {
-    await this.checkDepositor(this.sender, 'DEPOSITOR')
-    let deposit2 = await this._process.createProcess('DEPOSIT_BOOK_DEPOSIT_AND_WITH_DRAW_SLIP  ')
-    return deposit2
+    await this.checkDeposit(this.sender, 'DEPOSITOR')
+    let Depositor = await this._process.createProcess('DEPOSIT_BOOK_DEPOSIT_AND_WITH_DRAW_SLIP')
+    return Depositor
   }
   get_Deposit_book_deposit_and_with_draw_slip() {
-    return this._problem.getProblemByType('DEPOSIT_BOOK_DEPOSIT_AND_WITH_DRAW_SLIP')
+    return this._process.getProcessByType('DEPOSIT_BOOK_DEPOSIT_AND_WITH_DRAW_SLIP')
   }
-  // --------------------Business_Category ---------------------------
-  checkBusiness_Category(address) {
-    let checkBusiness_Category = this.getBusiness_CategoryByAddress(address)
-    if (!checkBusiness_Category || checkBusiness_Category.type !== 'BUSINESS_CATEGORY') throw `BUSINESS_CATEGORY IS NOT EXIST`
+  // --------------------Business_Category1 ---------------------------
+  checkBusiness_Category1(address) {
+    let checkBusiness_Category1 = this.getBusiness_Category1ByAddress(address)
+    if (!checkBusiness_Category1 || checkBusiness_Category1.type !== 'DEPOSIT_BOOK_DEPOSIT_AND_WITH_DRAW_SLIP') throw `DEPOSIT_BOOK_DEPOSIT_AND_WITH_DRAW_SLIP IS NOT EXIST`
     return true
   }
-  getBusiness_CategoryByAddress(address) {
+  getBusiness_Category1ByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
-  async Business_Category() {
+  async Business_Category1() {
     await this.checkDeposit_book_deposit_and_with_draw_slip(this.sender, 'DEPOSIT_BOOK_DEPOSIT_AND_WITH_DRAW_SLIP')
-    let business = await this._process.createProcess('BUSINESS_CATEGORY')
-    return business
+    let Business_Category1 = await this._process.createProcess('BUSINESS_CATEGORY')
+    return Business_Category1
   }
-  get_Business_Category() {
-    return this._problem.getProblemByType('BUSINESS_CATEGORY')
+  get_Business_Category1() {
+    return this._process.getProcessByType('BUSINESS_CATEGORY')
   }
   // --------------------With_draw_slip_deposit_book ---------------------------
   async With_draw_slip_deposit_book() {
-    await this.checkBusiness_Category(this.sender, 'BUSINESS_CATEGORY')
+    await this.checkBusiness_Category1(this.sender, 'BUSINESS_CATEGORY')
     let slip = await this._process.createProcess('WITH_DRAW_SLIP_DEPOSIT_BOOK')
     this.setToAddress(slip.address)
-    return 'SUCCESS'
+    return { slip }
   }
   // --------------------Deposit_book_deposit_slip ---------------------------
   async Deposit_book_deposit_slip() {
-    await this.checkBusiness_Category(this.sender, 'BUSINESS_CATEGORY')
+    await this.checkBusiness_Category1(this.sender, 'BUSINESS_CATEGORY')
     let book = await this._process.createProcess('DEPOSIT_BOOK_FEPOSIT_SLIP')
     this.setToAddress(book.address)
-    return 'SUCCESS'
+    return { book }
   }
 }
 export default TokenMain;
