@@ -6,7 +6,7 @@ class TokenMain extends Contract {
     'get_System',
     'get_Order_recceived',
     'get_Cancle_Order',
-    'get_Order_cancle',
+    'get_Order_canceled',
     'get_Do_not_cancle_order',
     'get_Start_Order_Processing',
     'get_Handle_Payment',
@@ -23,7 +23,7 @@ class TokenMain extends Contract {
   static authenticationFuncs = [
     'Order_recceived',
     'Cancle_Order',
-    'Order_cancle',
+    'Order_canceled',
     'Do_not_cancle_order',
     'Start_Order_Processing',
     'Handle_Payment',
@@ -45,8 +45,8 @@ class TokenMain extends Contract {
     'get_Order_recceived',
     'Cancle_Order',
     'get_Cancle_Order',
-    'Order_cancle',
-    'get_Order_cancle',
+    'Order_canceled',
+    'get_Order_canceled',
     'Do_not_cancle_order',
     'get_Do_not_cancle_order',
     'Start_Order_Processing',
@@ -126,17 +126,17 @@ class TokenMain extends Contract {
   get_Cancle_Order() {
     return this._process.getProcessByType('CANCLE_ORDER')
   }
-  // --------------------Order_cancle---------------------------
-  async Order_cancle(address_Cancle_Order) {
+  // --------------------Order_canceled---------------------------
+  async Order_canceled(address_Cancle_Order) {
     this._system.checkSystem(this.sender, 'SYSTEM')
     let check_Cancle_Order = this._process.getProcessByAddress(address_Cancle_Order)
     if (!check_Cancle_Order || check_Cancle_Order.type !== 'CANCLE_ORDER')
       throw 'CANCLE_ORDER IS NOT EXIST'
-    let Order_cancle = await this._process.createProcess('ORDER_CANCLE')
+    let Order_cancle = await this._process.createProcess('ORDER_CANCELED')
     return Order_cancle
   }
-  get_Order_cancle() {
-    return this._process.getProcessByType('ORDER_CANCLE')
+  get_Order_canceled() {
+    return this._process.getProcessByType('ORDER_CANCELED')
   }
   // --------------------Do_not_cancle_order---------------------------
   async Do_not_cancle_order(address_Order_recceived) {
