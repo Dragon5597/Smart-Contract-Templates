@@ -278,7 +278,7 @@ class TokenMain extends Contract {
   // --------------------Business_Category1 ---------------------------
   checkBusiness_Category1(address) {
     let checkBusiness_Category1 = this.getBusiness_Category1ByAddress(address)
-    if (!checkBusiness_Category1 || checkBusiness_Category1.type !== 'DEPOSIT_BOOK_DEPOSIT_AND_WITH_DRAW_SLIP') throw `DEPOSIT_BOOK_DEPOSIT_AND_WITH_DRAW_SLIP IS NOT EXIST`
+    if (!checkBusiness_Category1 || checkBusiness_Category1.type !== 'BUSINESS_CATEGORY') throw `BUSINESS_CATEGORY IS NOT EXIST`
     return true
   }
   getBusiness_Category1ByAddress(address) {

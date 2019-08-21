@@ -1,8 +1,8 @@
 import Contract from 'Contract'
-const types = ['SELECTION_VIA_COLLECTION_DEVELOPMENT_POLICY','COPYRIGHT','METADATA_CREATION']
-class Act extends Contract {
-  async createAct(type) {
-    if (!types.includes(type)) throw 'CREATE ACT FAIL'
+const types = ['SYSTEM']
+class System extends Contract {
+  async createSystem (type) {
+    if (!types.includes(type)) throw 'CREATE SYSTEM FAIL'
     const address = await this.generateAddress()
     console.log({ address })
     let rs = {
@@ -13,15 +13,15 @@ class Act extends Contract {
     this.accounts.push(rs)
     return address
   }
-  checkAct(address, type) {
-    let checkAct= this.getActByAddress(address)
-    if (!checkAct || checkAct.type !== type) throw `${type} IS NOT EXIST`
+  checkSystem (address, type) {
+    let checkSystem = this.getSystemByAddress(address)
+    if (!checkSystem || checkSystem.type !== type) throw `${type} IS NOT EXIST`
     return true
   }
-  getActByAddress (address) {
+  getSystemByAddress (address) {
     return this.accounts.find(account => account.address === address)
   }
-  getActByType (type) {
+  getSystemByType (type) {
     let lists = []
     this.accounts.find(account => {
       if (account.type === type) lists.push(account)
@@ -29,4 +29,4 @@ class Act extends Contract {
     return lists
   }
 }
-export default Act;
+export default System;
