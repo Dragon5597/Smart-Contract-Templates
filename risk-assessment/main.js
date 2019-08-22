@@ -1,5 +1,5 @@
 import Contract from 'Contract'
-import User from './act'
+import Act from './act'
 import Process from './process'
 class TokenMain extends Contract {
   static viewFuncs = [
@@ -33,7 +33,8 @@ class TokenMain extends Contract {
     'Design_and_Barriers',
     'Physical',
     'Risk_Assessment',
-    'Rish_Mitigation_Recommenda'
+    'Risk_Mitigation_Recommenda',
+    'Rish_Mitigation_Recommendations_Trade_Offs_and_Options'
   ]
   static publicFuncs = [
     'Document_Review',
@@ -73,7 +74,7 @@ class TokenMain extends Contract {
   static schemas = {
     name: {
       type: String,
-      default: 'SECURIITY RISK ASSESSMENT'
+      default: 'SECURIITY-RISK-ASSESSMENT'
     },
     accounts: [
       {
@@ -90,7 +91,7 @@ class TokenMain extends Contract {
   }
   constructor(data) {
     super(data)
-    this._user = new User(data)
+    this._act = new Act(data)
     this._process = new Process(data)
   }
   //---------------------Document_Review------------------------------
@@ -177,7 +178,6 @@ class TokenMain extends Contract {
   get_Crimes_and_Security_Incident() {
     return this._process.getProcessByType('CRIMES_AND_SECURITY_INCIDENT')
   }
-
   // --------------------Threats---------------------------
   checkACT1(address) {
     this.check_Crimes_and_Security_Incident = this.get_Crimes_and_Security_IncidentByAddress(address);
@@ -191,6 +191,14 @@ class TokenMain extends Contract {
     else {
       throw `CRIMES_AND_SECURITY_INCIDENT_OR_ASSETS IS NOT EXIST`;
     }
+  }
+  check_Threats(address) {
+    let check_Threats = this.get_ThreatsByAddress(address)
+    if (!check_Threats || check_Threats.type !== 'THREATS') throw `THREATS IS NOT EXIST`
+    return true
+  }
+  get_ThreatsByAddress(address) {
+    return this.accounts.find(account => account.address === address)
   }
   async Threats() {
     await this.checkACT1(this.sender, 'CRIMES_AND_SECURITY_INCIDENT_OR_ASSETS')
@@ -223,7 +231,7 @@ class TokenMain extends Contract {
     if (!check_Security_Personnel || check_Security_Personnel.type !== 'POLICIES_AND_TRAINING') throw `POLICIES_AND_TRAINING IS NOT EXIST`
     return true
   }
-  get_Security_PersonnelByAddress(address) {
+  get_Policies_and_TrainingByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
   async Policies_and_Training() {
@@ -239,7 +247,7 @@ class TokenMain extends Contract {
     let check_Operational = this.get_OperationalByAddress(address)
     if (!check_Operational || check_Operational.type !== 'OPERATIONAL') throw `OPERATIONAL IS NOT EXIST`
     return true
-  }
+  } 
   get_OperationalByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
@@ -286,7 +294,6 @@ class TokenMain extends Contract {
     return this._process.getProcessByType('DESIGN_AND_BARRIERS')
   }
   // --------------------Physical---------------------------
-
   check_Physical(address) {
     let check_Physical = this.get_PhysicalByAddress(address)
     if (!check_Physical || check_Physical.type !== 'PHYSICAL') throw `PHYSICAL IS NOT EXIST`
@@ -351,7 +358,7 @@ class TokenMain extends Contract {
     let Risk_Assessment = await this._process.createProcess('RISK_ASSESSMENT')
     return Risk_Assessment
   }
-  get_Rish_Assessment() {
+  get_Risk_Assessment() {
     return this._process.getProcessByType('RISH_ASSESSMENT')
   }
   // --------------------Rish_Mitigation_Recommendations_Trade_Offs_and_Options---------------------------

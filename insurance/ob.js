@@ -1,7 +1,7 @@
 import Contract from 'Contract'
 const types =[ 'COMPANY','CUSTOMER']
-class Object extends Contract {
-  async createProcess(type) {
+class Ob extends Contract {
+  async createOb(type) {
     if (!types.includes(type)) throw 'CREATE OBJECT FAIL'
     const address = await this.generateAddress()
     console.log({ address })
@@ -13,15 +13,15 @@ class Object extends Contract {
     this.accounts.push(rs)
     return address
   }
-  checkObject(address, type) {
-    let checObject = this.getObjectByAddress(address)
-    if (!checObject || checObject.type !== type) throw `${type} IS NOT EXIST`
+  checkOb(address, type) {
+    let checOb = this.getObByAddress(address)
+    if (!checOb || checOb.type !== type) throw `${type} IS NOT EXIST`
     return true
   }
-  getObjectByAddress(address) {
+  getObByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
-  getObjectByType(type) {
+  getObByType(type) {
     let lists = []
     this.accounts.find(account => {
       if (account.type === type) lists.push(account)
@@ -29,4 +29,4 @@ class Object extends Contract {
     return lists
   }
 }
-export default Object;
+export default Ob;

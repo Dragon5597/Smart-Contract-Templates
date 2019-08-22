@@ -1,5 +1,5 @@
 import Contract from 'Contract'
-const types = ['DOCUMET_REVIEW','CONCEPTUAL_THREATS','LIABILITY_ISSUES','LIGHT']
+const types = ['DOCUMET_REVIEW','CONCEPTUAL_THREATS','LIABILITY_ISSUES','LIGHTING']
 class Act extends Contract {
   async createAct (type) {
     if (!types.includes(type)) throw 'CREATE ACT FAIL'

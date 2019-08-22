@@ -19,17 +19,22 @@ class TokenMain extends Contract {
   ]
   static publicFuncs = [
     'Security_Token_Transaction',
+    'get_Security_Token_Transaction',
     'Compliance_Validation',
+    'get_Compliance_Validation',
     'KYC_or_AML',
+    'get_KYC_or_AML',
     'Asset_Ownership',
+    'get_Asset_Ownership',
     'Capital_Requirements',
     'Financial_Validation',
-    'Double_Spend'
+    'get_Financial_Validation',
+    'Double_Spend',
   ]
   static schemas = {
     name: {
       type: String,
-      default: 'SECURITY_TOKENS'
+      default: 'SECURITY-TOKENS'
     },
     accounts: [
       {
@@ -50,7 +55,7 @@ class TokenMain extends Contract {
     this._process = new Process(data)
   }
   //---------------------Security_Token_Transaction------------------------------
-  async Security_Token_Transaction () {
+  async Security_Token_Transaction() {
     let Security_Token_Transaction = await this._security.createSecurity('SECURITY_TOKEN_TRANSACTION')
     return Security_Token_Transaction
   }
@@ -127,7 +132,7 @@ class TokenMain extends Contract {
     await this.checkProcess1(this.sender, 'KYC_OR_AML_OR_ASSET_OWNERSHIP')
     let Capital_Requirements = await this._process.createProcess('CAPITAL_REQUIREMENTS')
     this.setToAddress(Capital_Requirements.address)
-    return {Capital_Requirements}
+    return { Capital_Requirements }
   }
   // --------------------Financial_Validation---------------------------
   check_Financial_Validation(address) {
@@ -151,7 +156,7 @@ class TokenMain extends Contract {
     await this.check_Financial_Validation(this.sender, 'FINANCIAL_VALIDATION')
     let Double_Spend = await this._process.createProcess('DOUBLE_SPEND')
     this.setToAddress(Double_Spend.address)
-    return {Double_Spend}
+    return { Double_Spend }
   }
 }
 export default TokenMain;

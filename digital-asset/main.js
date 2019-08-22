@@ -68,7 +68,7 @@ class TokenMain extends Contract {
   static schemas = {
     name: {
       type: String,
-      default: 'DIGITAL_ASSET'
+      default: 'DIGITAL-ASSET'
     },
     accounts: [
       {
@@ -223,7 +223,7 @@ class TokenMain extends Contract {
   }
   check_Dublin_core(address) {
     let check_Dublin_core = this.get_Dublin_coreByAddress(address)
-    if (!check_Dublin_core || check_Dublin_core.type !== 'CREATE_METADATA_CATALOGUE_RECORD_FOR_CREATION_DUBLIN_CORE') throw `CREATE_METADATA_CATALOGUE_RECORD_FOR_CREATION_DUBLIN_CORE IS NOT EXIST`
+    if (!check_Dublin_core || check_Dublin_core.type !== 'CREATE_METADATA_CATALOGUE_RECORD_FOR_DUBLIN_CORE') throw `CREATE_METADATA_CATALOGUE_RECORD_FOR_DUBLIN_CORE IS NOT EXIST`
     return true
   }
   get_Dublin_coreByAddress(address) {
@@ -277,9 +277,9 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async Digitise_create_Archival_Master_file() {
-    await this.check_Dublin_core(this.sender, 'CREATE_METADATA_CATALOGUE_RECORD_FOR_DUBLIN_CORE')
-    let Digitise = await this._process.createProcess('DIGITISE_CREATE_ARCHIVAL_MASTER_FILE')
-    return Digitise
+    await this.check_Dublin_core(this.sender, 'CREATE_METADATA_CATALOGUE_RECORD_FOR_DUBLIN_CORE ')
+    let Archival_Master = await this._process.createProcess('DIGITISE_CREATE_ARCHIVAL_MASTER_FILE')
+    return Archival_Master
   }
   get_Digitise_create_Archival_Master_file() {
     return this._process.getProcessByType('DIGITISE_CREATE_ARCHIVAL_MASTER_FILE')
@@ -295,8 +295,8 @@ class TokenMain extends Contract {
   }
   async Import_best_file_available_as_Archival_master() {
     await this.check_MARC(this.sender, 'CREATE_METADATA_CATALOGUE_RECORD_FOR_MARC')
-    let Digitise = await this._process.createProcess('IMPORT_BEST_FILE_AVAILABLE_AS_ARCHIVAL_MASTER')
-    return Digitise
+    let Import = await this._process.createProcess('IMPORT_BEST_FILE_AVAILABLE_AS_ARCHIVAL_MASTER')
+    return Import
   }
   get_Import_best_file_available_as_Archival_master() {
     return this._process.getProcessByType('IMPORT_BEST_FILE_AVAILABLE_AS_ARCHIVAL_MASTER')
@@ -323,12 +323,12 @@ class TokenMain extends Contract {
   get_Optimise_and_create_web_and_orther_derivativesByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
-  async Import_best_file_available_as_Archival_master() {
-    await this.check_ACT1(this.sender, 'IMPORT_BEST_FILE_AVAILABLE_AS_ARCHIVAL_MASTER_OR_DIGITISE_CREATE_ARCHIVAL_MASTER_FILE')
-    let Digitise = await this._process.createProcess('OPTIMISE_AND_CREATE_WEB_AND_ORTHER_DERIVATIVES')
-    return Digitise
+  async Optimise_and_create_web_and_orther_derivatives() {
+    await this.checkACT1(this.sender, 'IMPORT_BEST_FILE_AVAILABLE_AS_ARCHIVAL_MASTER_OR_DIGITISE_CREATE_ARCHIVAL_MASTER_FILE')
+    let Optimise = await this._process.createProcess('OPTIMISE_AND_CREATE_WEB_AND_ORTHER_DERIVATIVES')
+    return Optimise
   }
-  get_Import_best_file_available_as_Archival_master() {
+  get_Optimise_and_create_web_and_orther_derivatives() {
     return this._process.getProcessByType('OPTIMISE_AND_CREATE_WEB_AND_ORTHER_DERIVATIVES')
   }
   // --------------------Digital_Asset_Management---------------------------
@@ -361,7 +361,7 @@ class TokenMain extends Contract {
     await this.check_Optimise_and_create_web_and_orther_derivatives(this.sender, 'OPTIMISE_AND_CREATE_WEB_AND_ORTHER_DERIVATIVES')
     let Secure_storage = await this._process.createProcess('SECURE_STORAGE_OF_MASTER_BACKUP_PROCEDURES')
     this.setToAddress(Secure_storage.address)
-    return {Secure_storage}
+    return { Secure_storage }
   }
   // --------------------Link_web_images_to_Metadata---------------------------
   check_Link_web_images_to_Metadata(address) {
@@ -393,7 +393,7 @@ class TokenMain extends Contract {
     await this.check_Optimise_and_create_web_and_orther_derivatives(this.sender, 'OPTIMISE_AND_CREATE_WEB_AND_ORTHER_DERIVATIVES')
     let access = await this._process.createProcess('ACCESS_VIA_WEB_CATALOGUE')
     this.setToAddress(access.address)
-    return {access}
+    return { access }
   }
 }
 export default TokenMain;

@@ -22,12 +22,19 @@ class TokenMain extends Contract {
   ]
   static publicFuncs = [
     'User',
+    'get_User',
     'Transactions',
+    'get_Transactions',
     'Miners',
+    'get_Miners',
     'Block',
+    'get_Block',
     'Block_Puzzle',
+    'get_Block_Puzzle',
     'Proof_of_work',
-    'Verification'
+    'get_Proof_of_work',
+    'Verification',
+    'get_Verification'
   ]
   static schemas = {
     name: {
@@ -63,9 +70,9 @@ class TokenMain extends Contract {
   }
   //---------------------Transaction------------------------------
   checkProcess1(address) {
-    this._user.checkUser = this.get_UserByAddress(address);
+    this._user.checkUser = this._user.getUserByAddress(address);
     this.checkVerification = this.get_VerificationByAddress(address);
-    if (this._user.this.checkUser.type == 'USER') {
+    if (this._user.checkUser.type == 'USER') {
       return true;
     }
     else if (this.checkVerification.type == 'VERIFICATION') {
@@ -83,26 +90,26 @@ class TokenMain extends Contract {
   get_TransactionByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
-  async Transaction() {
+  async Transactions() {
     await this.checkProcess1(this.sender, 'USER_OR_VERIFICATION')
-    let Transaction = await this._process.createProcess('TRANSACTION')
+    let Transaction = await this._process.createProcess('TRANSACTIONS')
     return Transaction
   }
-  get_Transaction() {
-    return this._process.getProcessByType('TRANSACTION')
+  get_Transactions() {
+    return this._process.getProcessByType('TRANSACTIONS')
   }
   // --------------------Miners---------------------------
   checkProcess2(address) {
     this.check_Transaction = this.get_TransactionByAddress(address);
-    this.checkVerification = this.get_VerificationByAddress(address);
-    if (this._check_Transaction.type == 'TRANSACTION') {
+    this.check_Proof_of_work = this.get_Proof_of_workByAddress(address);
+    if (this.check_Transaction.type == 'TRANSACTIONS') {
       return true;
     }
     else if (this.check_Proof_of_work.type == 'PROOF_OF_WORK') {
       return true;
     }
     else {
-      throw `TRANSACTION_OR_PROOF_OF_WORK IS NOT EXIST`;
+      throw `TRANSACTIONS_OR_PROOF_OF_WORK IS NOT EXIST`;
     }
   }
   check_Miners(address) {
@@ -114,14 +121,13 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async Miners() {
-    await this.checkProcess2(this.sender, 'TRANSACTION_OR_PROOF_OF_WORK')
-    let Miners = await this._process.createProcess('CRIMES_AND_SECURITY_INCIDENT')
+    await this.checkProcess2(this.sender, 'TRANSACTIONS_OR_PROOF_OF_WORK')
+    let Miners = await this._process.createProcess('MINERS')
     return Miners
   }
   get_Crimes_and_Security_Incident() {
-    return this._process.getProcessByType('CRIMES_AND_SECURITY_INCIDENT')
+    return this._process.getProcessByType('MINERS')
   }
-
   // --------------------Block---------------------------
   check_Block(address) {
     let check_Block = this.get_BlockByAddress(address)
@@ -159,19 +165,19 @@ class TokenMain extends Contract {
   // --------------------Proof_of_work---------------------------
   check_Proof_of_work(address) {
     let check_Proof_of_work = this.get_Proof_of_workByAddress(address)
-    if (!check_Proof_of_work || check_Proof_of_work.type !== 'PROODF_OF_WORK') throw `PROODF_OF_WORK IS NOT EXIST`
+    if (!check_Proof_of_work || check_Proof_of_work.type !== 'PROOF_OF_WORK') throw `PROOF_OF_WORK IS NOT EXIST`
     return true
   }
   get_Proof_of_workByAddress(address) {
     return this.accounts.find(account => account.address === address)
   }
   async Proof_of_work() {
-    await this.check_Block_Puzzle(this.sender, 'SECURITY_PERSONNEL')
-    let Proof_of_work = await this._process.createProcess('PROODF_OF_WORK')
+    await this.check_Block_Puzzle(this.sender, 'BLOCK_PUZZLE')
+    let Proof_of_work = await this._process.createProcess('PROOF_OF_WORK')
     return Proof_of_work
   }
   get_Proof_of_work() {
-    return this._process.getProcessByType('PROODF_OF_WORK')
+    return this._process.getProcessByType('PROOF_OF_WORK')
   }
   // --------------------Verification---------------------------
   check_Verification(address) {
@@ -183,7 +189,7 @@ class TokenMain extends Contract {
     return this.accounts.find(account => account.address === address)
   }
   async Verification() {
-    await this.check_Proof_of_work(this.sender, 'PROODF_OF_WORK')
+    await this.check_Miners(this.sender, 'MINERS')
     let Verification = await this._process.createProcess('VERIFICATION')
     return Verification
   }
